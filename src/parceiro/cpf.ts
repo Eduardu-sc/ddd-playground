@@ -1,12 +1,13 @@
 import { DomainException } from "./domain-exception.js";
 
 export class Cpf {
-  constructor(private readonly valor: string) {
+  private constructor(private readonly valor: string) {
     if (valor.length !== 11) {
       throw new DomainException("Cpf Invalido");
     }
   }
-  getvalor(): string {
-    return this.valor;
+
+  static criar(valor: string): Cpf {
+    return new Cpf(valor);
   }
 }

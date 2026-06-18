@@ -11,6 +11,11 @@ export class Guard {
       throw new DomainException(mensagem);
     }
   }
+  static contraNullWhiteSpace(valor: string, mensagem: string): void {
+    if (valor === null || valor === undefined || !valor.trim) {
+      throw new DomainException(mensagem);
+    }
+  }
   static contraValorNegativo(valor: number, messagem: string): void {
     if (valor < 0) {
       throw new DomainException(messagem);

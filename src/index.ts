@@ -4,6 +4,7 @@ import { Parceiro } from "./parceiro/parceiro.js";
 import { StatusParceiro } from "./parceiro/status-parceiro.js";
 import { StatusQualificacao } from "./parceiro/status-qualificacao.js";
 import { PerfilParceiro } from "./parceiro/tipo-parceiro.js";
+import { EnderecoEntraga } from "./pedido/endereco-entrega.js";
 import { ItemPedido } from "./pedido/item-pedido.js";
 import { Pedido } from "./pedido/pedido.js";
 
@@ -11,11 +12,12 @@ const parceiro = new Parceiro(
   1,
   "PLAY HOSPITALAR",
   StatusParceiro.ATIVO,
-  new Cpf("12345678912"),
+  Cpf.criar("12345671812"),
   [PerfilParceiro.CLIENTE, PerfilParceiro.FORNECEDOR],
   StatusQualificacao.QUALIFICADO,
   new DadosCliente(10000),
 );
+
 console.log(parceiro);
 console.log("antes de bloquear");
 parceiro.bloquear();
@@ -27,7 +29,17 @@ parceiro.podeComprar();
 console.log("Depois de ativar");
 console.log("Operacao Autorida/Permetida");
 
-const pedido = new Pedido(1001, parceiro.id, []);
+const enderecoEntrega = EnderecoEntraga.criar(
+  "12345678",
+  "rua mg18 qd 31 lote 15",
+  "madre germana 1",
+  "",
+  "GO",
+  "aparecida de goiania",
+  "Brasil",
+);
+
+const pedido = new Pedido(1001, parceiro.id, enderecoEntrega, []);
 
 pedido.adicionarItem(new ItemPedido("parecetamol", 10, 10.5));
 pedido.adicionarItem(new ItemPedido("DIPIRONA", 8, 10.5));

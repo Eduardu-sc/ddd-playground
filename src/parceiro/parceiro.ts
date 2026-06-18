@@ -19,12 +19,14 @@ export class Parceiro {
     Guard.contraEmpty(nome, "Nome e obrigadorio");
     Guard.contraNull(id, "Ide obrigatorio");
   }
+
   bloquear(): void {
     this.status = StatusParceiro.BLOQUEADO;
   }
   ativar(): void {
     this.status = StatusParceiro.ATIVO;
   }
+
   possuirPerfil(perfil: PerfilParceiro): boolean {
     return this.perfis.includes(perfil);
   }
@@ -36,6 +38,7 @@ export class Parceiro {
   ehCliente(): boolean {
     return this.possuirPerfil(PerfilParceiro.CLIENTE);
   }
+
   validarLimite(valorPedido: number): void {
     if (!this.ehCliente) {
       throw new DomainException("Parceiro nao possui dados de cliente");
@@ -43,6 +46,7 @@ export class Parceiro {
 
     this.dadosCliente?.validarLimite(valorPedido);
   }
+  
   podeComprar(): void {
     if (!this.ehCliente())
       throw new DomainException("Somente Cliente pode comprar");
