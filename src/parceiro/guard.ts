@@ -12,13 +12,18 @@ export class Guard {
     }
   }
   static contraNullWhiteSpace(valor: string, mensagem: string): void {
-    if (valor === null || valor === undefined || !valor.trim) {
+    if (valor === null || valor === undefined || !valor.trim()) {
       throw new DomainException(mensagem);
     }
   }
-  static contraValorNegativo(valor: number, messagem: string): void {
+  static contraValorNegativo(valor: number, mensagem: string): void {
     if (valor < 0) {
-      throw new DomainException(messagem);
+      throw new DomainException(mensagem);
+    }
+  }
+  static contra(valor: boolean, mensagem: string): void {
+    if (valor) {
+      throw new DomainException(mensagem);
     }
   }
 }

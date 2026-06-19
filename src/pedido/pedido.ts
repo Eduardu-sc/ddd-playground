@@ -12,6 +12,6 @@ export class Pedido {
     this.itens.push(item);
   }
   total(): number {
-    return this.itens.reduce((soma, item) => soma + item.total(), 0);
+    return this.itens.reduce((soma, item) => soma + item.calcularTotal(), 0);
   }
 }

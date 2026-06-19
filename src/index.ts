@@ -1,3 +1,5 @@
+import { Pagamento } from "./pagamento/pagamento.js";
+import { StatusPagamento } from "./pagamento/status-pagamento.js";
 import { Cpf } from "./parceiro/cpf.js";
 import { DadosCliente } from "./parceiro/dados-Cliente.js";
 import { Parceiro } from "./parceiro/parceiro.js";
@@ -45,3 +47,13 @@ pedido.adicionarItem(new ItemPedido("parecetamol", 10, 10.5));
 pedido.adicionarItem(new ItemPedido("DIPIRONA", 8, 10.5));
 console.log(pedido.total());
 console.log(pedido);
+
+const pagamento = new Pagamento(1, 1001, StatusPagamento.PENDENTE, 500);
+pagamento.confirmar();
+
+const pagamento1 = new Pagamento(3, 1002, StatusPagamento.PENDENTE, 700);
+
+pagamento1.rejeitado();
+
+console.log(pagamento.getDomainEvents());
+console.log(pagamento1.getDomainEvents());

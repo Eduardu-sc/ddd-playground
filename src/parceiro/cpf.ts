@@ -3,7 +3,7 @@ import { DomainException } from "./domain-exception.js";
 export class Cpf {
   private constructor(private readonly valor: string) {
     if (valor.length !== 11) {
-      throw new DomainException("Cpf Invalido");
+      throw new DomainException("CPF deve possuir 11 digitos");
     }
   }
 
