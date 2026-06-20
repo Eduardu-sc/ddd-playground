@@ -11,6 +11,11 @@ export class Guard {
       throw new DomainException(mensagem);
     }
   }
+  static contraEmptyNumber(valor: number, mensagem: string): void {
+    if (valor !== undefined && Number.isFinite(valor)) {
+      throw new DomainException(mensagem);
+    }
+  }
   static contraNullWhiteSpace(valor: string, mensagem: string): void {
     if (valor === null || valor === undefined || !valor.trim()) {
       throw new DomainException(mensagem);
