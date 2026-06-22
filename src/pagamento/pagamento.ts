@@ -6,47 +6,42 @@ import { MetadoPagamento } from "./status-metado-pagamento.js";
 import { StatusPagamento } from "./status-pagamento.js";
 
 export class Pagamento extends Entity {
-  private constructor(
-    public id: number,
+  private dataPagamento: Date | null;
+  private codigoTransacao: string;
+  private statusPagamento: StatusPagamento;
+  constructor(
+    private idPagamento: number,
     public pedidoId: number,
-    private statusPagamento: StatusPagamento,
     private statusMetadoPagamento: MetadoPagamento,
     private valor: number,
-    private dataPagamento?: Date | null,
-    private codigoTransacao?: string,
   ) {
     super();
-  }
 
-  static criar(
-    pedidoId: number,
-    metadorPagamento: MetadoPagamento,
-    valor: number,
-  ): Pagamento {
     Guard.contraEmptyNumber(pedidoId, "pedido nao pode ser um valor vasio");
     Guard.contra(valor <= 0, "pedido nao pode ser Negativo ou zero");
     Guard.contra(
       !Object.values(MetadoPagamento).includes(
-        metadorPagamento as MetadoPagamento,
+        statusMetadoPagamento as MetadoPagamento,
       ),
       "Metado de pagamento deve ser valido",
     );
-    return new Pagamento(
-      1,
-      pedidoId,
-      StatusPagamento.PENDENTE,
-      metadorPagamento,
-      valor,
-      null,
-      "",
-    );
-  }
- static confirmar(): void {
-    this.statusPagamento = StatusPagamento.APROVADO;
 
+    this.statusPagamento = StatusPagamento.PENDENTE;
+    this.dataPagamento = null;
+    this.codigoTransacao = "";
+  }
+
+  confirmar(): void {
+    Guard.contra(
+      this.statusPagamento !== StatusPagamento.PENDENTE,
+      "Pagamento ja processado",
+    );
+    this.statusPagamento = StatusPagamento.APROVADO;
+    this.transacao();
+    this.dataPagamento = new Date();
     this.addDomainEvent(
       new PagamentoAprovadoEvent(
-        this.id.toString(),
+        this.idPagamento.toString(),
         this.pedidoId.toString(),
         this.valor,
         new Date(),
@@ -55,15 +50,27 @@ export class Pagamento extends Entity {
     );
   }
   rejeitado(): void {
+    Guard.contra(
+      this.statusPagamento !== StatusPagamento.PENDENTE,
+      "Pagamento ja processado",
+    );
     this.statusPagamento = StatusPagamento.REJEITADO;
+    this.transacao();
+    this.dataPagamento = new Date();
     this.addDomainEvent(
       new PagamentoRejeitadaEvent(
-        this.id.toString(),
+        this.idPagamento.toString(),
         this.pedidoId.toString(),
         this.valor,
         new Date(),
         this.codigoTransacao,
       ),
     );
+  }
+  private transacao(): void {
+    this.codigoTransacao = Math.random()
+      .toString(36)
+      .substring(2, 12)
+      .toUpperCase();
   }
 }

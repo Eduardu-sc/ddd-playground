@@ -12,7 +12,7 @@ export class Guard {
     }
   }
   static contraEmptyNumber(valor: number, mensagem: string): void {
-    if (valor !== undefined && Number.isFinite(valor)) {
+    if (valor !== undefined && !Number.isFinite(valor)) {
       throw new DomainException(mensagem);
     }
   }

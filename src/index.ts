@@ -49,13 +49,17 @@ pedido.adicionarItem(new ItemPedido("DIPIRONA", 8, 10.5));
 console.log(pedido.total());
 console.log(pedido);
 
-Pagamento.criar(pedido.id, MetadoPagamento.PIX, pedido.total());
+const pagamento1 = new Pagamento(
+  pedido.id,
+  pedido.id,
+  MetadoPagamento.DINHEIRO,
+  1000,
+);
+console.log("Criando o pagamento", pagamento1);
+//// pagamento1.confirmar();
+//// console.log("Confirmando o pagamento", pagamento1);
 
- Pagamento.confirmar();
-
-// //const pagamento1 = new Pagamento(3, 1002, StatusPagamento.PENDENTE, 700);
-
-// pagamento1.rejeitado();
-
-// console.log(pagamento.getDomainEvents());
-// console.log(pagamento1.getDomainEvents());
+pagamento1.rejeitado();
+console.log("Rejeitando o pagamento", pagamento1);
+//// console.log(pagamento.getDomainEvents());
+//// console.log(pagamento1.getDomainEvents());
