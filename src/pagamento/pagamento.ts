@@ -35,8 +35,7 @@ export class Pagamento extends Entity {
     Guard.contra(
       this.statusPagamento !== StatusPagamento.PENDENTE,
       "Pagamento ja processado",
-    );
-    this.statusPagamento = StatusPagamento.APROVADO;
+    ); this.statusPagamento = StatusPagamento.APROVADO;
     this.transacao();
     this.dataPagamento = new Date();
     this.addDomainEvent(

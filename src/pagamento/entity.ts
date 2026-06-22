@@ -1,7 +1,12 @@
 import type { IDomainEvent } from "../shared/domain/events/idomain-events.js";
 
-
 export abstract class Entity {
+  constructor(
+    public readonly id: number,
+    public readonly dataCriacao: Date = new Date(),
+    public readonly dataAtualizacao: Date = new Date(),
+  ) {}
+
   private readonly domainEvents: IDomainEvent[] = [];
 
   public getDomainEvents(): readonly IDomainEvent[] {
