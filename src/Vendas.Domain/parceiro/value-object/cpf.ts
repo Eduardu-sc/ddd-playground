@@ -1,4 +1,4 @@
-import { DomainException } from "./domain-exception.js";
+import { DomainException } from "../../common/domainException/domain-exception.js";
 
 export class Cpf {
   private constructor(private readonly valor: string) {

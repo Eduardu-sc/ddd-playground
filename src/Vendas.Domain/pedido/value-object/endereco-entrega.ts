@@ -1,6 +1,6 @@
-import { Guard } from "../parceiro/guard.js";
+import { Guard } from "../../common/validations/guard.js";
 
-export class EnderecoEntraga {
+export class EnderecoEntrega {
   private constructor(
     private readonly cep: string,
     private readonly lograduro: string,
@@ -26,8 +26,8 @@ export class EnderecoEntraga {
     uf: string,
     cidade: string,
     pais: string,
-  ): EnderecoEntraga {
-    return new EnderecoEntraga(
+  ): EnderecoEntrega {
+    return new EnderecoEntrega(
       cep,
       lograduro,
       bairro,

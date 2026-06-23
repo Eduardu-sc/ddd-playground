@@ -1,4 +1,4 @@
-import { DomainException } from "./domain-exception.js";
+import { DomainException } from "../domainException/domain-exception.js";
 
 export class Guard {
   static contraNull(valor: unknown, mensagem: string): void {

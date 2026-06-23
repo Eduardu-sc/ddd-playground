@@ -1,6 +1,6 @@
-import { DomainEventBase } from "./domain-eventBase.js";
+import { DomainEventBase } from "../../events/domain-eventBase.js";
 
-export class PagamentoRejeitadaEvent extends DomainEventBase {
+export class PagamentoAprovadoEvent extends DomainEventBase {
   constructor(
     public readonly pagamentoId: string,
     public readonly pedidoId: string,

@@ -1,4 +1,4 @@
-import { Guard } from "../parceiro/guard.js";
+import { Guard } from "../../common/validations/guard.js";
 
 export class ItemPedido {
   private descontoAplicado: number = 0;
@@ -11,6 +11,8 @@ export class ItemPedido {
       valorUnitario,
       "Valor unitario nao pode ser negativo!",
     );
+    Guard.contraEmpty(produto, "o produto nao pode ser vazio");
+    
   }
   calcularTotal(): number {
     return this.quantidade * this.valorUnitario - this.descontoAplicado;

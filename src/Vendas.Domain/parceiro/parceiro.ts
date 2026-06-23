@@ -1,10 +1,11 @@
-import type { Cpf } from "./cpf.js";
-import type { DadosCliente } from "./dados-Cliente.js";
-import { DomainException } from "./domain-exception.js";
-import { Guard } from "./guard.js";
-import { StatusParceiro } from "./status-parceiro.js";
-import { StatusQualificacao } from "./status-qualificacao.js";
-import { PerfilParceiro } from "./tipo-parceiro.js";
+import { DomainException } from "../common/domainException/domain-exception.js";
+import { Guard } from "../common/validations/guard.js";
+import type { DadosCliente } from "./entities/dados-Cliente.js";
+import type { Cpf } from "./value-object/cpf.js";
+
+import { StatusParceiro } from "./enums/status-parceiro.js";
+import { StatusQualificacao } from "./enums/status-qualificacao.js";
+import { PerfilParceiro } from "./enums/perfil-parceiro.js";
 
 export class Parceiro {
   constructor(
@@ -40,13 +41,13 @@ export class Parceiro {
   }
 
   validarLimite(valorPedido: number): void {
-    if (!this.ehCliente) {
+    if (!this.ehCliente()) {
       throw new DomainException("Parceiro nao possui dados de cliente");
     }
 
     this.dadosCliente?.validarLimite(valorPedido);
   }
-  
+
   podeComprar(): void {
     if (!this.ehCliente())
       throw new DomainException("Somente Cliente pode comprar");

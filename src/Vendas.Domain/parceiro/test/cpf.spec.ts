@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Cpf } from "./cpf.js";
+import { Cpf } from "../value-object/cpf.js";
 
 describe("Cpf", () => {
   it("Deve lancar um erro quando o cpf for diferente 11 digitos", () => {

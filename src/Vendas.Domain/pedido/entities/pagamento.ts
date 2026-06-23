@@ -1,27 +1,29 @@
-import { Guard } from "../parceiro/guard.js";
-import { PagamentoAprovadoEvent } from "../shared/domain/events/pagamento-Aprovado-Events.js";
-import { PagamentoRejeitadaEvent } from "../shared/domain/events/pagamento-Rejeitado-Events.js";
-import { Entity } from "./entity.js";
-import { MetadoPagamento } from "./status-metado-pagamento.js";
-import { StatusPagamento } from "./status-pagamento.js";
+import { Entity } from "../../../shared/domain/entity.js";
+import { MetodoPagamento } from "../enums/metodo-pagamento.js";
+import { StatusPagamento } from "../enums/pagamento.enum.js";
+import { Guard } from "../../common/validations/guard.js";
+
+import { PagamentoRejeitadaEvent } from "../events/pagamento-rejeitado.event.js";
+import { PagamentoAprovadoEvent } from "../events/pagamento-aprovado.event.js";
 
 export class Pagamento extends Entity {
   private dataPagamento: Date | null;
   private codigoTransacao: string;
   private statusPagamento: StatusPagamento;
   constructor(
+    id: number,
     private idPagamento: number,
     public pedidoId: number,
-    private statusMetadoPagamento: MetadoPagamento,
+    private statusMetadoPagamento: MetodoPagamento,
     private valor: number,
   ) {
-    super();
+    super(id);
 
     Guard.contraEmptyNumber(pedidoId, "pedido nao pode ser um valor vasio");
     Guard.contra(valor <= 0, "pedido nao pode ser Negativo ou zero");
     Guard.contra(
-      !Object.values(MetadoPagamento).includes(
-        statusMetadoPagamento as MetadoPagamento,
+      !Object.values(MetodoPagamento).includes(
+        statusMetadoPagamento as MetodoPagamento,
       ),
       "Metado de pagamento deve ser valido",
     );
@@ -35,7 +37,8 @@ export class Pagamento extends Entity {
     Guard.contra(
       this.statusPagamento !== StatusPagamento.PENDENTE,
       "Pagamento ja processado",
-    ); this.statusPagamento = StatusPagamento.APROVADO;
+    );
+    this.statusPagamento = StatusPagamento.APROVADO;
     this.transacao();
     this.dataPagamento = new Date();
     this.addDomainEvent(

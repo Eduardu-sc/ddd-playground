@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { ItemPedido } from "./item-pedido.js";
+import { ItemPedido } from "../entities/item-pedido.js";
 
 describe("item-Pedido", () => {
   it("Deve retorna um erro caso valor do item seja negativo.", () => {

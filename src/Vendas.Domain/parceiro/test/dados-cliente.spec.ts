@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { DadosCliente } from "./dados-Cliente.js";
+import { DadosCliente } from "../entities/dados-Cliente.js";
 
 describe("DadosCliente", () => {
   it("Deve Lançar erro quando o limite for negativo", () => {

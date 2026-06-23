@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { Pedido } from "./pedido.js";
-import { EnderecoEntraga } from "./endereco-entrega.js";
-import { ItemPedido } from "./item-pedido.js";
+import { Pedido } from "../pedido.js";
+import { EnderecoEntraga } from "../value-object/endereco-entrega.js";
+import { ItemPedido } from "../entities/item-pedido.js";
 
 describe("Pedido", () => {
   it("Dedeve criar um pedido valido", () => {

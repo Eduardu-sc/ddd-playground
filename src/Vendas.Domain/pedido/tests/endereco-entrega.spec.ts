@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { EnderecoEntraga } from "./endereco-entrega.js";
+import { EnderecoEntrega } from "../value-object/endereco-entrega.js";
 
 describe("enderecoEntrega", () => {
   it("Deve criar um endereco valido", () => {
-    const endereco = EnderecoEntraga.criar(
+    const endereco = EnderecoEntrega.criar(
       "123456",
       "Rua A",
       "Centro",
@@ -18,7 +18,7 @@ describe("enderecoEntrega", () => {
 
   it("Deve lançar erro quando cep for vazio", () => {
     expect(() => {
-      EnderecoEntraga.criar(
+      EnderecoEntrega.criar(
         "",
         "Rua A",
         "Centro",
@@ -32,7 +32,7 @@ describe("enderecoEntrega", () => {
 
   it("Deve lançar erro quando lograduro for vazio", () => {
     expect(() => {
-      EnderecoEntraga.criar(
+      EnderecoEntrega.criar(
         "123456",
         "",
         "Centro",
@@ -45,7 +45,7 @@ describe("enderecoEntrega", () => {
   });
   it("Deve lançar erro quando bairro for vazio", () => {
     expect(() => {
-      EnderecoEntraga.criar(
+      EnderecoEntrega.criar(
         "123456",
         "Rua A",
         "",
@@ -58,7 +58,7 @@ describe("enderecoEntrega", () => {
   });
   it("Deve lançar erro quando UF for vazio", () => {
     expect(() => {
-      EnderecoEntraga.criar(
+      EnderecoEntrega.criar(
         "123456",
         "Rua A",
         "Centro",
@@ -72,7 +72,7 @@ describe("enderecoEntrega", () => {
 
   it("Deve lançar erro quando cidade for vazio", () => {
     expect(() => {
-      EnderecoEntraga.criar(
+      EnderecoEntrega.criar(
         "123456",
         "Rua A",
         "Centro",
@@ -85,7 +85,7 @@ describe("enderecoEntrega", () => {
   });
   it("Deve lançar erro quando pais for vazio", () => {
     expect(() => {
-      EnderecoEntraga.criar(
+      EnderecoEntrega.criar(
         "123456",
         "Rua A",
         "Centro",

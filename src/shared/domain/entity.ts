@@ -1,7 +1,7 @@
-import type { IDomainEvent } from "../shared/domain/events/idomain-events.js";
+import type { IDomainEvent } from "../../Vendas.Domain/events/idomain-events.js";
 
 export abstract class Entity {
-  constructor(
+  protected constructor(
     public readonly id: number,
     public readonly dataCriacao: Date = new Date(),
     public readonly dataAtualizacao: Date = new Date(),

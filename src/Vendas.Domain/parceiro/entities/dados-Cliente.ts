@@ -1,5 +1,5 @@
-import { DomainException } from "./domain-exception.js";
-import { Guard } from "./guard.js";
+import { DomainException } from "../../common/domainException/domain-exception.js";
+import { Guard } from "../../common/validations/guard.js";
 
 export class DadosCliente {
   constructor(public readonly limiteCredito: number) {
