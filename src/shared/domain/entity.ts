@@ -1,4 +1,4 @@
-import type { IDomainEvent } from "../../Vendas.Domain/events/idomain-events.js";
+import type { IDomainEvent } from "../../Vendas.Domain/common/events/idomain-events.js";
 
 export abstract class Entity {
   protected constructor(

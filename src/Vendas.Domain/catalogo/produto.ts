@@ -10,6 +10,7 @@ export class Produto extends Entity {
     private nome: NomeProduto,
     private preco: number,
     private statusProduto: StatusProduto,
+    private categoria: number,
   ) {
     super(id);
     Guard.contraEmptyNumber(this.preco, "Preco dever ser um numero ");
@@ -20,11 +21,18 @@ export class Produto extends Entity {
       ),
       "status pagamento foi informado incorreto",
     );
+    Guard.contraEmptyNumber(categoria, "deve ser informado numero");
   }
 
-  static criar(nome: NomeProduto, preco: number): Produto {
+  static criar(nome: NomeProduto, preco: number, categoria: number): Produto {
     const idNovo = Math.random();
-    const produto = new Produto(idNovo, nome, preco, StatusProduto.ATIVO);
+    const produto = new Produto(
+      idNovo,
+      nome,
+      preco,
+      StatusProduto.ATIVO,
+      categoria,
+    );
 
     return produto;
   }

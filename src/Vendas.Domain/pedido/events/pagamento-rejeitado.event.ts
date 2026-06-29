@@ -1,4 +1,4 @@
-import { DomainEventBase } from "../../events/domain-eventBase.js";
+import { DomainEventBase } from "../../common/events/domain-eventBase.js";
 
 export class PagamentoRejeitadaEvent extends DomainEventBase {
   constructor(
