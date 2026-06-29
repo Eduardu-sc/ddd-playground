@@ -1,4 +1,5 @@
 import { Entity } from "../../shared/domain/entity.js";
+import { DomainException } from "../common/domainException/domain-exception.js";
 import { Guard } from "../common/validations/guard.js";
 import { StatusProduto } from "./enum/status-produto.enum.js";
 import { NomeProduto } from "./value-object/nomeProduto.js";
@@ -28,7 +29,6 @@ export class Produto extends Entity {
     return produto;
   }
   alterarNome(nome: string): void {
-    
     this.nome = NomeProduto.criar(nome);
   }
   alterarPreco(preco: number): void {
@@ -41,5 +41,10 @@ export class Produto extends Entity {
   }
   bloquear(): void {
     this.statusProduto = StatusProduto.BLOQUEADO;
+  }
+  comprar(): void {
+    if (this.statusProduto === StatusProduto.BLOQUEADO) {
+      throw new DomainException("Produto Bloqueado nao pode ser vencido");
+    }
   }
 }
