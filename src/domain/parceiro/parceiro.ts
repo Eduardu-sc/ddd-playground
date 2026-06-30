@@ -1,4 +1,4 @@
-import { DomainException } from "../common/domainException/domain-exception.js";
+import { DomainException } from "../common/exceptions/domain-exception.js";
 import { Guard } from "../common/validations/guard.js";
 import type { DadosCliente } from "./entities/dados-Cliente.js";
 import type { Cpf } from "./value-object/cpf.js";
@@ -6,19 +6,21 @@ import type { Cpf } from "./value-object/cpf.js";
 import { StatusParceiro } from "./enums/status-parceiro.js";
 import { StatusQualificacao } from "./enums/status-qualificacao.js";
 import { PerfilParceiro } from "./enums/perfil-parceiro.js";
+import { Entity } from "../common/base/entity.js";
 
-export class Parceiro {
+export class Parceiro extends Entity {
   constructor(
-    public readonly id: number,
-    public readonly nome: string,
+    public id: number,
+    private nome: string,
     private status: StatusParceiro,
     private cpf: Cpf,
     private perfis: PerfilParceiro[],
     private statusQualificacao: StatusQualificacao,
     private dadosCliente?: DadosCliente,
   ) {
-    Guard.contraEmpty(nome, "Nome e obrigadorio");
-    Guard.contraNull(id, "Ide obrigatorio");
+    super(id);
+    Guard.contraEmpty(this.nome, "Nome e obrigadorio");
+    Guard.contraNull(this.id, "Ide obrigatorio");
   }
 
   bloquear(): void {

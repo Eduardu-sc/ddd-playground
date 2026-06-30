@@ -1,6 +1,6 @@
-import { Entity } from "../../shared/domain/entity.js";
-import { DomainException } from "../common/domainException/domain-exception.js";
+import { DomainException } from "../common/exceptions/domain-exception.js";
 import { Guard } from "../common/validations/guard.js";
+import { Entity } from "../common/base/entity.js";
 import { StatusProduto } from "./enum/status-produto.enum.js";
 import { NomeProduto } from "./value-object/nomeProduto.js";
 

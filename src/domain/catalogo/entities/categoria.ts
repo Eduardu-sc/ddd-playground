@@ -1,11 +1,14 @@
+import { Entity } from "../../common/base/entity.js";
 import { Guard } from "../../common/validations/guard.js";
 
-export class Categoria {
+export class Categoria extends Entity {
   constructor(
+    public id: number,
     private nome: string,
     private ativo: boolean,
     private descricao?: string,
   ) {
+    super(id);
     Guard.contraNullWhiteSpace(this.nome, "nome e obrigatorio");
     Guard.contra(this.nome.length < 3, "nome deve ter minimo 3 carecteres");
     this.ativo = true;

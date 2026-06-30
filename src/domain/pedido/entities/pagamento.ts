@@ -1,10 +1,10 @@
-import { Entity } from "../../../shared/domain/entity.js";
 import { MetodoPagamento } from "../enums/metodo-pagamento.js";
 import { StatusPagamento } from "../enums/pagamento.enum.js";
 import { Guard } from "../../common/validations/guard.js";
 
 import { PagamentoRejeitadaEvent } from "../events/pagamento-rejeitado.event.js";
 import { PagamentoAprovadoEvent } from "../events/pagamento-aprovado.event.js";
+import { Entity } from "../../common/base/entity.js";
 
 export class Pagamento extends Entity {
   private dataPagamento: Date | null;

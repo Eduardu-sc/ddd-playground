@@ -1,16 +1,16 @@
-import { Pagamento } from "./Vendas.Domain/pedido/entities/pagamento.js";
-import { MetodoPagamento } from "./Vendas.Domain/pedido/enums/metodo-pagamento.js";
-import { StatusPagamento } from "./Vendas.Domain/pedido/enums/pagamento.enum.js";
-import { DadosCliente } from "./Vendas.Domain/parceiro/entities/dados-Cliente.js";
-import { Cpf } from "./Vendas.Domain/parceiro/value-object/cpf.js";
+import { Pagamento } from "./domain/pedido/entities/pagamento.js";
+import { MetodoPagamento } from "./domain/pedido/enums/metodo-pagamento.js";
+import { StatusPagamento } from "./domain/pedido/enums/pagamento.enum.js";
+import { DadosCliente } from "./domain/parceiro/entities/dados-Cliente.js";
+import { Cpf } from "./domain/parceiro/value-object/cpf.js";
 
-import { Parceiro } from "./Vendas.Domain/parceiro/parceiro.js";
-import { StatusParceiro } from "./Vendas.Domain/parceiro/enums/status-parceiro.js";
-import { StatusQualificacao } from "./Vendas.Domain/parceiro/enums/status-qualificacao.js";
-import { PerfilParceiro } from "./Vendas.Domain/parceiro/enums/perfil-parceiro.js";
-import { EnderecoEntrega } from "./Vendas.Domain/pedido/value-object/endereco-entrega.js";
-import { ItemPedido } from "./Vendas.Domain/pedido/entities/item-pedido.js";
-import { Pedido } from "./Vendas.Domain/pedido/pedido.js";
+import { Parceiro } from "./domain/parceiro/parceiro.js";
+import { StatusParceiro } from "./domain/parceiro/enums/status-parceiro.js";
+import { StatusQualificacao } from "./domain/parceiro/enums/status-qualificacao.js";
+import { PerfilParceiro } from "./domain/parceiro/enums/perfil-parceiro.js";
+import { EnderecoEntrega } from "./domain/pedido/value-object/endereco-entrega.js";
+import { ItemPedido } from "./domain/pedido/entities/item-pedido.js";
+import { Pedido } from "./domain/pedido/pedido.js";
 
 const parceiro = new Parceiro(
   1,
@@ -58,10 +58,9 @@ const pagamento1 = new Pagamento(
   1000,
 );
 console.log("Criando o pagamento", pagamento1);
-//// pagamento1.confirmar();
-//// console.log("Confirmando o pagamento", pagamento1);
+pagamento1.confirmar();
+console.log("Confirmando o pagamento", pagamento1);
 
 pagamento1.rejeitado();
 console.log("Rejeitando o pagamento", pagamento1);
-//// console.log(pagamento.getDomainEvents());
-//// console.log(pagamento1.getDomainEvents());
+console.log(pagamento1.getDomainEvents());

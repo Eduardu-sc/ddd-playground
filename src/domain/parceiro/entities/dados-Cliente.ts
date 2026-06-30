@@ -1,4 +1,4 @@
-import { DomainException } from "../../common/domainException/domain-exception.js";
+import { DomainException } from "../../common/exceptions/domain-exception.js";
 import { Guard } from "../../common/validations/guard.js";
 
 export class DadosCliente {
