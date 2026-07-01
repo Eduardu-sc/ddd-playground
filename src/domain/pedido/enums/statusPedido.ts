@@ -1,0 +1,8 @@
+export enum StatusPedido {
+  PENDENTE = "PENDENTE",
+  PAGO = "PAGO",
+  FATURADO = "FATURADO",
+  EXPEDIDO = "EXPEDIDO",
+  FINALIZADO = "FINALIZADO",
+  CANCELADO = "CANCELADO",
+}

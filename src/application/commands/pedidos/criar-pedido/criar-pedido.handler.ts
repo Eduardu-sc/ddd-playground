@@ -1,7 +1,7 @@
 import { Pedido } from "../../../../domain/pedido/pedido.js";
 import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido-repository.js";
 import type { CriarPedidoCommand } from "./criar-pedido.command.js";
-import { CriarPedidoResultDto } from "./criar-pedido.result.js";
+import { CriarPedidoResultDto } from "./criar-pedido.resultDTO.js";
 
 export class CriarPedidoCommandHandler {
   constructor(private readonly pedidoRepository: IPedidoRepository) {}
@@ -10,6 +10,12 @@ export class CriarPedidoCommandHandler {
 
     await this.pedidoRepository.adicionar(pedido);
 
-    return new CriarPedidoResultDto();
+    return new CriarPedidoResultDto(
+      pedido.id,
+      pedido.numeroPedido,
+      pedido.dataCriacao,
+      pedido.total(),
+      pedido.getStatusPedido(),
+    );
   }
 }

@@ -1,28 +1,63 @@
 import type { EnderecoEntrega } from "./value-object/endereco-entrega.js";
 import type { ItemPedido } from "./entities/item-pedido.js";
-import { Entity } from "../common/base/entity.js";
 import { AggregateRoot } from "../common/base/aggregate-Root.js";
 import { Guard } from "../common/validations/guard.js";
+import { StatusPedido } from "./enums/statusPedido.js";
 
 export class Pedido extends AggregateRoot {
   private constructor(
     public readonly id: number,
+    public readonly numeroPedido: string,
     public readonly parceiroId: number,
     private readonly enderecoEntrega: EnderecoEntrega,
-    private itens: ItemPedido[],
+    private readonly statusPedido: StatusPedido,
+    private readonly itens: ItemPedido[],
   ) {
-    Guard.contraEmptyNumber(id, "id e obrigadorio");
+    Guard.contraEmptyNumber(id, "Id é obrigatório");
+    Guard.contraEmptyNumber(parceiroId, "Parceiro é obrigatório");
+    Guard.contra(!enderecoEntrega, "Endereço de entrega é obrigatório");
+
     super(id);
   }
-  static criar(clienteId: number, endereco: EnderecoEntrega): Pedido {
-    const idNovo = Math.random();
-    return new Pedido(idNovo, clienteId, endereco, []);
+
+  static criar(parceiroId: number, enderecoEntrega: EnderecoEntrega): Pedido {
+    const id = Math.floor(Math.random() * 100000);
+    const numeroPedido = `PED-${id}`;
+    return new Pedido(
+      id,
+      numeroPedido,
+      parceiroId,
+      enderecoEntrega,
+      StatusPedido.PENDENTE,
+      [],
+    );
   }
 
   adicionarItem(item: ItemPedido): void {
+    Guard.contra(!item, "Item é obrigatório");
+
     this.itens.push(item);
   }
+  getStatusPedido(): StatusPedido {
+    return this.statusPedido;
+  }
+  removerItem(itemId: number): void {
+    const indice = this.itens.findIndex((item) => item.id === itemId);
+
+    Guard.contra(indice === -1, "Item não encontrado");
+
+    this.itens.splice(indice, 1);
+  }
+
+  getItens(): readonly ItemPedido[] {
+    return this.itens;
+  }
+
+  quantidadeItens(): number {
+    return this.itens.length;
+  }
+
   total(): number {
-    return this.itens.reduce((soma, item) => soma + item.calcularTotal(), 0);
+    return this.itens.reduce((total, item) => total + item.calcularTotal(), 0);
   }
 }

@@ -1,44 +1,78 @@
+import { Entity } from "../../common/base/entity.js";
 import { Guard } from "../../common/validations/guard.js";
 
-export class ItemPedido {
-  private descontoAplicado: number = 0;
+
+export class ItemPedido extends Entity {
+  private descontoAplicado = 0;
+
   constructor(
+    public readonly id: number,
     public readonly produto: string,
-    public quantidade: number,
-    public valorUnitario: number,
+    private quantidade: number,
+    private valorUnitario: number,
   ) {
+    super(id);
+    Guard.contraEmpty(produto, "Produto é obrigatório");
+    Guard.contra(quantidade <= 0, "Quantidade deve ser maior que zero");
     Guard.contraValorNegativo(
       valorUnitario,
-      "Valor unitario nao pode ser negativo!",
+      "Valor unitário não pode ser negativo",
     );
-    Guard.contraEmpty(produto, "o produto nao pode ser vazio");
-    
   }
-  calcularTotal(): number {
-    return this.quantidade * this.valorUnitario - this.descontoAplicado;
+
+  getQuantidade(): number {
+    return this.quantidade;
+  }
+
+  getValorUnitario(): number {
+    return this.valorUnitario;
+  }
+
+  getDescontoAplicado(): number {
+    return this.descontoAplicado;
+  }
+ 
+
+  adicionarQuantidade(unidade: number): void {
+    Guard.contra(unidade <= 0, "Deve adicionar pelo menos uma unidade");
+
+    this.quantidade += unidade;
   }
 
   removerQuantidade(unidade: number): void {
-    Guard.contra(unidade <= 0, "deve-se remover pelo menos uma unidade!");
+    Guard.contra(unidade <= 0, "Deve remover pelo menos uma unidade");
+
     Guard.contra(
       unidade > this.quantidade,
-      "nao e possivel remover mais unidades do que existe no item",
+      "Não é possível remover mais unidades do que existem no item",
     );
-    const validaQuantidade = this.quantidade - unidade;
+
+    const novaQuantidade = this.quantidade - unidade;
+
     Guard.contra(
-      validaQuantidade === 0,
-      "quantidade nao pode ser valor zero remove o item",
+      novaQuantidade === 0,
+      "Quantidade não pode ficar zerada. Remova o item do pedido.",
     );
-    this.quantidade -= unidade;
+
+    this.quantidade = novaQuantidade;
   }
 
   aplicarDesconto(desconto: number): void {
-    Guard.contra(desconto < 0, "Desconto nao pode ser negativo");
+    Guard.contra(desconto < 0, "Desconto não pode ser negativo");
+
     Guard.contra(
-      desconto > this.quantidade * this.valorUnitario,
-      "Desconto nao pode exceder valor total do item",
+      desconto > this.subtotal(),
+      "Desconto não pode ser maior que o subtotal do item",
     );
+
     this.descontoAplicado = desconto;
-    this.calcularTotal();
+  }
+
+  subtotal(): number {
+    return this.quantidade * this.valorUnitario;
+  }
+
+  calcularTotal(): number {
+    return this.subtotal() - this.descontoAplicado;
   }
 }
