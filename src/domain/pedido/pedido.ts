@@ -9,7 +9,7 @@ export class Pedido extends AggregateRoot {
     public readonly id: number,
     public readonly numeroPedido: string,
     public readonly parceiroId: number,
-    private readonly enderecoEntrega: EnderecoEntrega,
+    private enderecoEntrega: EnderecoEntrega,
     private readonly statusPedido: StatusPedido,
     private readonly itens: ItemPedido[],
   ) {
@@ -32,7 +32,16 @@ export class Pedido extends AggregateRoot {
       [],
     );
   }
-
+  getEnderecoEntrega(): EnderecoEntrega {
+    return this.enderecoEntrega;
+  }
+  atualizarEnderecoEntrega(novoEndereco: EnderecoEntrega) {
+    Guard.contra(
+      this.statusPedido !== StatusPedido.PENDENTE,
+      "O endereço só pode ser alterado enquanto o pedido estiver pendente.",
+    );
+    this.enderecoEntrega = novoEndereco;
+  }
   adicionarItem(
     produtoId: number,
     nomeProduto: string,
@@ -53,15 +62,25 @@ export class Pedido extends AggregateRoot {
 
     this.itens.push(item);
   }
-  getStatusPedido(): StatusPedido {
-    return this.statusPedido;
-  }
   removerItem(itemId: number): void {
+    Guard.contraEmptyNumber(itemId, "itemId invalido");
+    Guard.contra(
+      this.statusPedido !== StatusPedido.PENDENTE,
+      "itens so pode ser removido caso o pedido esteja pendente",
+    );
+
     const indice = this.itens.findIndex((item) => item.id === itemId);
 
     Guard.contra(indice === -1, "Item não encontrado");
-
+    Guard.contra(
+      this.itens.length === 1,
+      "O pedido deve conter pelo menos um item.",
+    );
     this.itens.splice(indice, 1);
+  }
+
+  getStatusPedido(): StatusPedido {
+    return this.statusPedido;
   }
 
   getItens(): readonly ItemPedido[] {
