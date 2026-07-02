@@ -3,6 +3,7 @@ import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido
 import type { CriarPedidoCommand } from "./criar-pedido.command.js";
 import { CriarPedidoResultDto } from "./criar-pedido.resultDTO.js";
 
+
 export class CriarPedidoCommandHandler {
   constructor(private readonly pedidoRepository: IPedidoRepository) {}
   async handle(command: CriarPedidoCommand): Promise<CriarPedidoResultDto> {

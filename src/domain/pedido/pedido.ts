@@ -1,5 +1,5 @@
-import type { EnderecoEntrega } from "./value-object/endereco-entrega.js";
-import type { ItemPedido } from "./entities/item-pedido.js";
+import { EnderecoEntrega } from "./value-object/endereco-entrega.js";
+import { ItemPedido } from "./entities/item-pedido.js";
 import { AggregateRoot } from "../common/base/aggregate-Root.js";
 import { Guard } from "../common/validations/guard.js";
 import { StatusPedido } from "./enums/statusPedido.js";
@@ -33,8 +33,23 @@ export class Pedido extends AggregateRoot {
     );
   }
 
-  adicionarItem(item: ItemPedido): void {
-    Guard.contra(!item, "Item é obrigatório");
+  adicionarItem(
+    produtoId: number,
+    nomeProduto: string,
+    valorUnitario: number,
+    quantidade: number,
+  ): void {
+    Guard.contraEmptyNumber(produtoId, "Produto é obrigatório");
+    Guard.contraEmpty(nomeProduto, "Nome do produto é obrigatório");
+    Guard.contra(valorUnitario <= 0, "Valor unitário deve ser maior que zero");
+    Guard.contra(quantidade <= 0, "Quantidade deve ser maior que zero");
+
+    const item = new ItemPedido(
+      produtoId,
+      nomeProduto,
+      quantidade,
+      valorUnitario,
+    );
 
     this.itens.push(item);
   }

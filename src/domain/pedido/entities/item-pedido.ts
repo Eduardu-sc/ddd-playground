@@ -1,15 +1,14 @@
 import { Entity } from "../../common/base/entity.js";
 import { Guard } from "../../common/validations/guard.js";
 
-
 export class ItemPedido extends Entity {
   private descontoAplicado = 0;
 
   constructor(
     public readonly id: number,
     public readonly produto: string,
-    private quantidade: number,
-    private valorUnitario: number,
+    public quantidade: number,
+    public valorUnitario: number,
   ) {
     super(id);
     Guard.contraEmpty(produto, "Produto é obrigatório");
@@ -31,7 +30,6 @@ export class ItemPedido extends Entity {
   getDescontoAplicado(): number {
     return this.descontoAplicado;
   }
- 
 
   adicionarQuantidade(unidade: number): void {
     Guard.contra(unidade <= 0, "Deve adicionar pelo menos uma unidade");
