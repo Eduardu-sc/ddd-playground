@@ -1,6 +1,6 @@
 import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido-repository.js";
-import type { RemoverItemDoPedidoCommand } from "./removerItemDoPedido.command.js";
-import { RemoverItemDoPedidoResultDto } from "./removeritemDoPedido.resultDto.js";
+import type { RemoverItemDoPedidoCommand } from "./remover-ItemDoPedido.command.js";
+import { RemoverItemDoPedidoResultDto } from "./remover-itemDoPedido.resultDto.js";
 
 export class RemoverItemDoPedidoHandler {
   constructor(private readonly pedidoRepository: IPedidoRepository) {}

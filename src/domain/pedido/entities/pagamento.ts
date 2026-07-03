@@ -12,7 +12,6 @@ export class Pagamento extends Entity {
   private statusPagamento: StatusPagamento;
   constructor(
     id: number,
-    private idPagamento: number,
     public pedidoId: number,
     private statusMetadoPagamento: MetodoPagamento,
     private valor: number,
@@ -32,7 +31,9 @@ export class Pagamento extends Entity {
     this.dataPagamento = null;
     this.codigoTransacao = "";
   }
-
+  getStatusDoPagamento(): StatusPagamento {
+    return this.statusPagamento;
+  }
   confirmar(): void {
     Guard.contra(
       this.statusPagamento !== StatusPagamento.PENDENTE,
@@ -43,7 +44,7 @@ export class Pagamento extends Entity {
     this.dataPagamento = new Date();
     this.addDomainEvent(
       new PagamentoAprovadoEvent(
-        this.idPagamento.toString(),
+        this.id.toString(),
         this.pedidoId.toString(),
         this.valor,
         new Date(),
@@ -61,7 +62,7 @@ export class Pagamento extends Entity {
     this.dataPagamento = new Date();
     this.addDomainEvent(
       new PagamentoRejeitadaEvent(
-        this.idPagamento.toString(),
+        this.id.toString(),
         this.pedidoId.toString(),
         this.valor,
         new Date(),

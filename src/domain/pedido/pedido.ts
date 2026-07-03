@@ -3,8 +3,11 @@ import { ItemPedido } from "./entities/item-pedido.js";
 import { AggregateRoot } from "../common/base/aggregate-Root.js";
 import { Guard } from "../common/validations/guard.js";
 import { StatusPedido } from "./enums/statusPedido.js";
+import type { MetodoPagamento } from "./enums/metodo-pagamento.js";
+import { Pagamento } from "./entities/pagamento.js";
 
 export class Pedido extends AggregateRoot {
+  private pagamento: Pagamento | null = null;
   private constructor(
     public readonly id: number,
     public readonly numeroPedido: string,
@@ -31,6 +34,25 @@ export class Pedido extends AggregateRoot {
       StatusPedido.PENDENTE,
       [],
     );
+  }
+  iniciarPagamento(metodoPagamento: MetodoPagamento): Pagamento {
+    Guard.contra(this.pagamento !== null, "O pedido já possui um pagamento.");
+
+    Guard.contra(
+      this.itens.length === 0,
+      "O pedido deve possuir pelo menos um item.",
+    );
+
+    Guard.contra(
+      this.statusPedido !== StatusPedido.PENDENTE,
+      "Somente pedidos pendentes podem iniciar pagamento.",
+    );
+
+    const pagamento = new Pagamento(1, this.id, metodoPagamento, this.total());
+
+    this.pagamento = pagamento;
+
+    return pagamento;
   }
   getEnderecoEntrega(): EnderecoEntrega {
     return this.enderecoEntrega;

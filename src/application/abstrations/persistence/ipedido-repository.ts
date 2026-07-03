@@ -1,4 +1,3 @@
-import type { promises } from "node:dns";
 import type { Pedido } from "../../../domain/pedido/pedido.js";
 
 export interface IPedidoRepository {

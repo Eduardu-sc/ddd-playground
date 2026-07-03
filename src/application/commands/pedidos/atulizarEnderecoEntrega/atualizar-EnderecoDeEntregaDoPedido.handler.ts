@@ -1,6 +1,6 @@
 import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido-repository.js";
-import { AtualizarEnderecoEntregaDoPedidoResultDto } from "./atualizarEnderecoDeEntragaDoPedido.resultDto.js";
-import type { AtualizarEnderecoEntregaDoPedidoCommand } from "./atualizarEnderecoDeEntregaDoPedido.command.js";
+import { AtualizarEnderecoEntregaDoPedidoResultDto } from "./atualizar-EnderecoDeEntragaDoPedido.resultDto.js";
+import type { AtualizarEnderecoEntregaDoPedidoCommand } from "./atualizar-EnderecoDeEntregaDoPedido.command.js";
 
 export class AtualizaEnderecoEntregaDoPedidoHandler {
   constructor(private pedidoRepository: IPedidoRepository) {}
