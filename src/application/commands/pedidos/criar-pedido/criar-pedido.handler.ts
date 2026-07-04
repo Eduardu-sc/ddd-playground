@@ -1,8 +1,7 @@
 import { Pedido } from "../../../../domain/pedido/pedido.js";
 import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido-repository.js";
-import type { CriarPedidoCommand } from "./criar-pedido.command.js";
-import { CriarPedidoResultDto } from "./criar-pedido.resultDTO.js";
-
+import { CriarPedidoCommand } from "./criar-pedido.command.js";
+import { CriarPedidoResultDto } from "./criar-pedido.resultDto.js";
 
 export class CriarPedidoCommandHandler {
   constructor(private readonly pedidoRepository: IPedidoRepository) {}

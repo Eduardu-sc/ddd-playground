@@ -1,3 +1,4 @@
+import { DomainException } from "../../../../domain/common/exceptions/domain-exception.js";
 import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido-repository.js";
 import type { RemoverItemDoPedidoCommand } from "./remover-ItemDoPedido.command.js";
 import { RemoverItemDoPedidoResultDto } from "./remover-itemDoPedido.resultDto.js";
@@ -11,7 +12,7 @@ export class RemoverItemDoPedidoHandler {
     const pedido = await this.pedidoRepository.obterPorId(command.pedidoId);
 
     if (pedido == null) {
-      throw new Error("Perdido nao encontrado!");
+      throw new DomainException("Perdido nao encontrado!");
     }
     pedido.removerItem(command.itemId);
     this.pedidoRepository.atualizar(pedido);

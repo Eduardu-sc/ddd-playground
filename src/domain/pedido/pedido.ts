@@ -5,15 +5,17 @@ import { Guard } from "../common/validations/guard.js";
 import { StatusPedido } from "./enums/statusPedido.js";
 import type { MetodoPagamento } from "./enums/metodo-pagamento.js";
 import { Pagamento } from "./entities/pagamento.js";
+import type { MotivoCancelamento } from "./value-object/motivo-cancelamento.js";
 
 export class Pedido extends AggregateRoot {
   private pagamento: Pagamento | null = null;
+  private motivoCancelamento: MotivoCancelamento | null = null;
   private constructor(
     public readonly id: number,
     public readonly numeroPedido: string,
     public readonly parceiroId: number,
     private enderecoEntrega: EnderecoEntrega,
-    private readonly statusPedido: StatusPedido,
+    private statusPedido: StatusPedido,
     private readonly itens: ItemPedido[],
   ) {
     Guard.contraEmptyNumber(id, "Id é obrigatório");
@@ -34,6 +36,16 @@ export class Pedido extends AggregateRoot {
       StatusPedido.PENDENTE,
       [],
     );
+  }
+
+  cancelar(motivo: MotivoCancelamento): void {
+    Guard.contra(
+      this.statusPedido !== StatusPedido.PENDENTE,
+      "Somente pedidos pendentes podem ser cancelados.",
+    );
+
+    this.statusPedido = StatusPedido.CANCELADO;
+    this.motivoCancelamento = motivo;
   }
   iniciarPagamento(metodoPagamento: MetodoPagamento): Pagamento {
     Guard.contra(this.pagamento !== null, "O pedido já possui um pagamento.");

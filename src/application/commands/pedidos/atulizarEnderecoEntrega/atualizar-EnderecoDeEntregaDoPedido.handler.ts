@@ -3,18 +3,18 @@ import { AtualizarEnderecoEntregaDoPedidoResultDto } from "./atualizar-EnderecoD
 import type { AtualizarEnderecoEntregaDoPedidoCommand } from "./atualizar-EnderecoDeEntregaDoPedido.command.js";
 
 export class AtualizaEnderecoEntregaDoPedidoHandler {
-  constructor(private pedidoRepository: IPedidoRepository) {}
+  constructor(private _pedidoRepository: IPedidoRepository) {}
   async handle(
     command: AtualizarEnderecoEntregaDoPedidoCommand,
   ): Promise<AtualizarEnderecoEntregaDoPedidoResultDto> {
-    const pedido = await this.pedidoRepository.obterPorId(command.pedidoId);
+    const pedido = await this._pedidoRepository.obterPorId(command.pedidoId);
 
     if (pedido == null) {
       throw new Error("Pedido nao encontrado!");
     }
     pedido.atualizarEnderecoEntrega(command.enderecoEntrega);
 
-    await this.pedidoRepository.atualizar(pedido);
+    await this._pedidoRepository.atualizar(pedido);
 
     return new AtualizarEnderecoEntregaDoPedidoResultDto(
       pedido.id,
