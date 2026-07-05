@@ -1,14 +1,17 @@
+import { DomainException } from "../../../../domain/common/exceptions/domain-exception.js";
 import { Pedido } from "../../../../domain/pedido/pedido.js";
 import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido-repository.js";
 import { CriarPedidoCommand } from "./criar-pedido.command.js";
 import { CriarPedidoResultDto } from "./criar-pedido.resultDto.js";
 
 export class CriarPedidoCommandHandler {
-  constructor(private readonly pedidoRepository: IPedidoRepository) {}
+  constructor(private readonly _pedidoRepository: IPedidoRepository) {}
   async handle(command: CriarPedidoCommand): Promise<CriarPedidoResultDto> {
     const pedido = Pedido.criar(command.clienteId, command.enderecoEntrega);
 
-    await this.pedidoRepository.adicionar(pedido);
+    if (pedido == null) throw new DomainException("Pedido nao encontrado!");
+
+    await this._pedidoRepository.adicionar(pedido);
 
     return new CriarPedidoResultDto(
       pedido.id,

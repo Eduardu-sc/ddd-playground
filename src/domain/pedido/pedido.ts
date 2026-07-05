@@ -6,16 +6,18 @@ import { StatusPedido } from "./enums/statusPedido.js";
 import type { MetodoPagamento } from "./enums/metodo-pagamento.js";
 import { Pagamento } from "./entities/pagamento.js";
 import type { MotivoCancelamento } from "./value-object/motivo-cancelamento.js";
+import { StatusPagamento } from "./enums/pagamento.enum.js";
 
 export class Pedido extends AggregateRoot {
-  private pagamento: Pagamento | null = null;
   private motivoCancelamento: MotivoCancelamento | null = null;
+  private pagamento: Pagamento | null = null;
   private constructor(
     public readonly id: number,
     public readonly numeroPedido: string,
     public readonly parceiroId: number,
     private enderecoEntrega: EnderecoEntrega,
     private statusPedido: StatusPedido,
+
     private readonly itens: ItemPedido[],
   ) {
     Guard.contraEmptyNumber(id, "Id é obrigatório");
@@ -33,11 +35,31 @@ export class Pedido extends AggregateRoot {
       numeroPedido,
       parceiroId,
       enderecoEntrega,
+
       StatusPedido.PENDENTE,
       [],
     );
   }
-
+  marcarComoEntregue(): void {
+    Guard.contra(
+      this.statusPedido !== StatusPedido.ENVIADO,
+      "Pedido so pode ser marcado como 'Entregue' quando ele for 'Enviado",
+    );
+  
+    this.statusPedido = StatusPedido.ENTREGUE;
+  }
+  marcarComoEnviado(): void {
+    Guard.contra(this.pagamento == null, "pedido nao posui pagamento");
+    Guard.contra(
+      this.statusPedido !== StatusPedido.PENDENTE,
+      "Somente pedidos pendentes podem ser cancelados.",
+    );
+    Guard.contra(
+      this.pagamento?.getStatusDoPagamento() !== StatusPagamento.APROVADO,
+      "O pagamento deve estar aprovado para enviar o pedido.",
+    );
+    this.statusPedido = StatusPedido.ENVIADO;
+  }
   cancelar(motivo: MotivoCancelamento): void {
     Guard.contra(
       this.statusPedido !== StatusPedido.PENDENTE,

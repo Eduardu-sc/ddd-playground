@@ -4,18 +4,18 @@ import type { RemoverItemDoPedidoCommand } from "./remover-ItemDoPedido.command.
 import { RemoverItemDoPedidoResultDto } from "./remover-itemDoPedido.resultDto.js";
 
 export class RemoverItemDoPedidoHandler {
-  constructor(private readonly pedidoRepository: IPedidoRepository) {}
+  constructor(private readonly _pedidoRepository: IPedidoRepository) {}
 
   async handle(
     command: RemoverItemDoPedidoCommand,
   ): Promise<RemoverItemDoPedidoResultDto> {
-    const pedido = await this.pedidoRepository.obterPorId(command.pedidoId);
+    const pedido = await this._pedidoRepository.obterPorId(command.pedidoId);
 
     if (pedido == null) {
       throw new DomainException("Perdido nao encontrado!");
     }
     pedido.removerItem(command.itemId);
-    this.pedidoRepository.atualizar(pedido);
+    this._pedidoRepository.atualizar(pedido);
 
     return new RemoverItemDoPedidoResultDto(
       pedido.id,

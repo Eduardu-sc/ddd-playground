@@ -1,7 +1,7 @@
-import { error } from "node:console";
 import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido-repository.js";
 import type { AdicionarItemAoPedidoCommand } from "./adicionar-itemAoPedido.command.js";
 import { AdicionarItemAoPedidoResultDto } from "./adicionar-itemAoPedido.resultDto.js";
+import { DomainException } from "../../../../domain/common/exceptions/domain-exception.js";
 
 export class AdicionarItemAoPedidoHandles {
   constructor(private readonly repositoryPedido: IPedidoRepository) {}
@@ -11,7 +11,7 @@ export class AdicionarItemAoPedidoHandles {
   ): Promise<AdicionarItemAoPedidoResultDto> {
     const pedido = await this.repositoryPedido.obterPorId(command.pedidoId);
     if (pedido == null) {
-      throw new Error("Pedido nao Encontrado");
+      throw new DomainException("Pedido nao Encontrado");
     }
     pedido?.adicionarItem(
       command.pedidoId,

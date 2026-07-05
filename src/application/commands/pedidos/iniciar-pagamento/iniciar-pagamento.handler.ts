@@ -1,3 +1,4 @@
+import { DomainException } from "../../../../domain/common/exceptions/domain-exception.js";
 import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido-repository.js";
 import type { IniciarPagamentoCommand } from "./iniciar-pagamento.command.js";
 import { IniciarPagamentoResultDto } from "./iniciar-pagamento.resultDto.js";
@@ -11,7 +12,7 @@ export class IniciarPagamentoHandler {
     const pedido = await this._repositoryPedido.obterPorId(command.pedidoId);
 
     if (pedido == null) {
-      throw new Error("pedido nao localizado!");
+      throw new DomainException("pedido nao localizado!");
     }
     const pagamento = pedido.iniciarPagamento(command.metadoPagamento);
     await this._repositoryPedido.atualizar(pedido);
