@@ -4,7 +4,7 @@ export abstract class Entity {
   protected constructor(
     public readonly id: number,
     public readonly dataCriacao: Date = new Date(),
-    public readonly dataAtualizacao: Date = new Date(),
+    public dataAtualizacao: Date = new Date(),
   ) {}
 
   private readonly domainEvents: IDomainEvent[] = [];
@@ -27,5 +27,8 @@ export abstract class Entity {
 
   public clearDomainEvents(): void {
     this.domainEvents.length = 0;
+  }
+  protected atualizarData(): void {
+    this.dataAtualizacao = new Date();
   }
 }

@@ -7,6 +7,10 @@ import type { MetodoPagamento } from "./enums/metodo-pagamento.js";
 import { Pagamento } from "./entities/pagamento.js";
 import type { MotivoCancelamento } from "./value-object/motivo-cancelamento.js";
 import { StatusPagamento } from "./enums/pagamento.enum.js";
+import { PedidoEntregueEvent } from "./events/pedido-entregue.event.js";
+import { PedidoEnviadoEvent } from "./events/pedido-enviado.event.js";
+import { PedidoCanceladoEvent } from "./events/pedido-cancelado.event.js";
+import { PedidoCriadoEvent } from "./events/pedido-criado.event.js";
 
 export class Pedido extends AggregateRoot {
   private motivoCancelamento: MotivoCancelamento | null = null;
@@ -30,7 +34,7 @@ export class Pedido extends AggregateRoot {
   static criar(parceiroId: number, enderecoEntrega: EnderecoEntrega): Pedido {
     const id = Math.floor(Math.random() * 100000);
     const numeroPedido = `PED-${id}`;
-    return new Pedido(
+    const pedido = new Pedido(
       id,
       numeroPedido,
       parceiroId,
@@ -39,15 +43,20 @@ export class Pedido extends AggregateRoot {
       StatusPedido.PENDENTE,
       [],
     );
+    pedido.addDomainEvent(new PedidoCriadoEvent(pedido.id, pedido.parceiroId));
+    return pedido;
   }
   marcarComoEntregue(): void {
     Guard.contra(
       this.statusPedido !== StatusPedido.ENVIADO,
       "Pedido so pode ser marcado como 'Entregue' quando ele for 'Enviado",
     );
-  
+
     this.statusPedido = StatusPedido.ENTREGUE;
+    this.atualizarData();
+    this.addDomainEvent(new PedidoEntregueEvent(this.id, this.parceiroId));
   }
+
   marcarComoEnviado(): void {
     Guard.contra(this.pagamento == null, "pedido nao posui pagamento");
     Guard.contra(
@@ -59,7 +68,10 @@ export class Pedido extends AggregateRoot {
       "O pagamento deve estar aprovado para enviar o pedido.",
     );
     this.statusPedido = StatusPedido.ENVIADO;
+    this.atualizarData();
+    this.addDomainEvent(new PedidoEnviadoEvent(this.id, this.parceiroId));
   }
+
   cancelar(motivo: MotivoCancelamento): void {
     Guard.contra(
       this.statusPedido !== StatusPedido.PENDENTE,
@@ -68,6 +80,8 @@ export class Pedido extends AggregateRoot {
 
     this.statusPedido = StatusPedido.CANCELADO;
     this.motivoCancelamento = motivo;
+    this.atualizarData();
+    this.addDomainEvent(new PedidoCanceladoEvent(this.id, this.parceiroId));
   }
   iniciarPagamento(metodoPagamento: MetodoPagamento): Pagamento {
     Guard.contra(this.pagamento !== null, "O pedido já possui um pagamento.");
@@ -85,7 +99,7 @@ export class Pedido extends AggregateRoot {
     const pagamento = new Pagamento(1, this.id, metodoPagamento, this.total());
 
     this.pagamento = pagamento;
-
+    this.atualizarData();
     return pagamento;
   }
   getEnderecoEntrega(): EnderecoEntrega {
@@ -97,6 +111,7 @@ export class Pedido extends AggregateRoot {
       "O endereço só pode ser alterado enquanto o pedido estiver pendente.",
     );
     this.enderecoEntrega = novoEndereco;
+    this.atualizarData();
   }
   adicionarItem(
     produtoId: number,
@@ -117,6 +132,7 @@ export class Pedido extends AggregateRoot {
     );
 
     this.itens.push(item);
+    this.atualizarData();
   }
   removerItem(itemId: number): void {
     Guard.contraEmptyNumber(itemId, "itemId invalido");
@@ -133,6 +149,7 @@ export class Pedido extends AggregateRoot {
       "O pedido deve conter pelo menos um item.",
     );
     this.itens.splice(indice, 1);
+    this.atualizarData();
   }
 
   getStatusPedido(): StatusPedido {
