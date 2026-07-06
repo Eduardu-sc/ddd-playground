@@ -34,6 +34,13 @@ export class Produto extends Entity {
   alterarNome(nome: string): void {
     this.nome = NomeProduto.criar(nome);
   }
+  alterarCategoria(novaCategoriaId: number): void {
+    Guard.contraEmptyNumber(
+      novaCategoriaId,
+      "codigo da novaCategoriaId deve ser informada",
+    );
+    this.categoriaId = novaCategoriaId;
+  }
 
   alterarPreco(preco: number): void {
     Guard.contraEmptyNumber(preco, "Preço deve ser informado.");
@@ -54,5 +61,14 @@ export class Produto extends Entity {
     if (this.statusProduto === StatusProduto.BLOQUEADO) {
       throw new DomainException("Produto bloqueado não pode ser vendido.");
     }
+  }
+  get getPreco(): number {
+    return this.preco;
+  }
+  get getStatus(): StatusProduto {
+    return this.statusProduto;
+  }
+  get getCategoriaId(): number {
+    return this.categoriaId;
   }
 }
