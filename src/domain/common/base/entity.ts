@@ -1,13 +1,12 @@
 import type { IDomainEvent } from "../events/idomain-events.js";
 
 export abstract class Entity {
+  private readonly domainEvents: IDomainEvent[] = [];
   protected constructor(
     public readonly id: number,
     public readonly dataCriacao: Date = new Date(),
     public dataAtualizacao: Date = new Date(),
   ) {}
-
-  private readonly domainEvents: IDomainEvent[] = [];
 
   public getDomainEvents(): readonly IDomainEvent[] {
     return this.domainEvents;
@@ -28,7 +27,7 @@ export abstract class Entity {
   public clearDomainEvents(): void {
     this.domainEvents.length = 0;
   }
-  protected atualizarData(): void {
+  protected marcaComoAlterado(): void {
     this.dataAtualizacao = new Date();
   }
 }

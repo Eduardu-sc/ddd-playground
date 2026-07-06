@@ -53,7 +53,7 @@ export class Pedido extends AggregateRoot {
     );
 
     this.statusPedido = StatusPedido.ENTREGUE;
-    this.atualizarData();
+    this.marcaComoAlterado();
     this.addDomainEvent(new PedidoEntregueEvent(this.id, this.parceiroId));
   }
 
@@ -68,7 +68,7 @@ export class Pedido extends AggregateRoot {
       "O pagamento deve estar aprovado para enviar o pedido.",
     );
     this.statusPedido = StatusPedido.ENVIADO;
-    this.atualizarData();
+    this.marcaComoAlterado();
     this.addDomainEvent(new PedidoEnviadoEvent(this.id, this.parceiroId));
   }
 
@@ -80,7 +80,7 @@ export class Pedido extends AggregateRoot {
 
     this.statusPedido = StatusPedido.CANCELADO;
     this.motivoCancelamento = motivo;
-    this.atualizarData();
+    this.marcaComoAlterado();
     this.addDomainEvent(new PedidoCanceladoEvent(this.id, this.parceiroId));
   }
   iniciarPagamento(metodoPagamento: MetodoPagamento): Pagamento {
@@ -99,7 +99,7 @@ export class Pedido extends AggregateRoot {
     const pagamento = new Pagamento(1, this.id, metodoPagamento, this.total());
 
     this.pagamento = pagamento;
-    this.atualizarData();
+    this.marcaComoAlterado();
     return pagamento;
   }
   getEnderecoEntrega(): EnderecoEntrega {
@@ -111,7 +111,7 @@ export class Pedido extends AggregateRoot {
       "O endereço só pode ser alterado enquanto o pedido estiver pendente.",
     );
     this.enderecoEntrega = novoEndereco;
-    this.atualizarData();
+    this.marcaComoAlterado();
   }
   adicionarItem(
     produtoId: number,
@@ -132,7 +132,7 @@ export class Pedido extends AggregateRoot {
     );
 
     this.itens.push(item);
-    this.atualizarData();
+    this.marcaComoAlterado();
   }
   removerItem(itemId: number): void {
     Guard.contraEmptyNumber(itemId, "itemId invalido");
@@ -149,7 +149,7 @@ export class Pedido extends AggregateRoot {
       "O pedido deve conter pelo menos um item.",
     );
     this.itens.splice(indice, 1);
-    this.atualizarData();
+    this.marcaComoAlterado();
   }
 
   getStatusPedido(): StatusPedido {
