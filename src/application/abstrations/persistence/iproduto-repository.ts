@@ -1,4 +1,4 @@
-import type { Produto } from "../../../domain/catalogo/produto.js";
+import type { Produto } from "../../../domain/catalogo/entities/produto.js";
 
 export interface IProdutoRepository {
   obterPorId(id: number): Promise<Produto | null>;

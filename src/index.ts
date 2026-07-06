@@ -4,13 +4,13 @@ import { StatusPagamento } from "./domain/pedido/enums/pagamento.enum.js";
 import { DadosCliente } from "./domain/parceiro/entities/dados-Cliente.js";
 import { Cpf } from "./domain/parceiro/value-object/cpf.js";
 
-import { Parceiro } from "./domain/parceiro/parceiro.js";
+import { Parceiro } from "./domain/parceiro/entities/parceiro.js";
 import { StatusParceiro } from "./domain/parceiro/enums/status-parceiro.js";
 import { StatusQualificacao } from "./domain/parceiro/enums/status-qualificacao.js";
 import { PerfilParceiro } from "./domain/parceiro/enums/perfil-parceiro.js";
 import { EnderecoEntrega } from "./domain/pedido/value-object/endereco-entrega.js";
 import { ItemPedido } from "./domain/pedido/entities/item-pedido.js";
-import { Pedido } from "./domain/pedido/pedido.js";
+import { Pedido } from "./domain/pedido/entities/pedido.js";
 
 const parceiro = new Parceiro(
   1,

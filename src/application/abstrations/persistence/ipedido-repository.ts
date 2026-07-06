@@ -1,4 +1,4 @@
-import type { Pedido } from "../../../domain/pedido/pedido.js";
+import type { Pedido } from "../../../domain/pedido/entities/pedido.js";
 
 export interface IPedidoRepository {
   obterPorId(id: number): Promise<Pedido | null>;

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Pedido } from "../pedido.js";
+import { Pedido } from "../entities/pedido.js";
 import { EnderecoEntraga } from "../value-object/endereco-entrega.js";
 import { ItemPedido } from "../entities/item-pedido.js";
 

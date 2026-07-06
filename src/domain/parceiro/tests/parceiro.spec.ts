@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { Parceiro } from "../parceiro.js";
+import { Parceiro } from "../entities/parceiro.js";
 import { StatusParceiro } from "../enums/status-parceiro.js";
 
 import { PerfilParceiro } from "../enums/perfil-parceiro.js";

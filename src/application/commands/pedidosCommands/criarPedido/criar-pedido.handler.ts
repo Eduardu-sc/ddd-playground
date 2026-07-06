@@ -1,8 +1,8 @@
 import { DomainException } from "../../../../domain/common/exceptions/domain-exception.js";
-import { Pedido } from "../../../../domain/pedido/pedido.js";
+import { Pedido } from "../../../../domain/pedido/entities/pedido.js";
 import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido-repository.js";
 import { CriarPedidoCommand } from "./criar-pedido.command.js";
-import { CriarPedidoResultDto } from "./criar-pedido.resultDto.js";
+import { CriarPedidoResultDto } from "./criar-pedido.resultDTO.js";
 
 export class CriarPedidoCommandHandler {
   constructor(private readonly _pedidoRepository: IPedidoRepository) {}

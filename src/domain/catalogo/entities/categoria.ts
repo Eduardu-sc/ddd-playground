@@ -23,6 +23,9 @@ export class Categoria extends Entity {
     Guard.contra(this.ativo === true, "Categoria esta ativa");
     this.ativo = true;
   }
+  getAtivo(): boolean {
+    return this.ativo;
+  }
   inativar(): void {
     Guard.contra(this.ativo === false, "Categoria esta desativada");
     this.ativo = false;

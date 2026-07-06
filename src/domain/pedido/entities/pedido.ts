@@ -1,16 +1,16 @@
-import { EnderecoEntrega } from "./value-object/endereco-entrega.js";
-import { ItemPedido } from "./entities/item-pedido.js";
-import { AggregateRoot } from "../common/base/aggregate-Root.js";
-import { Guard } from "../common/validations/guard.js";
-import { StatusPedido } from "./enums/statusPedido.js";
-import type { MetodoPagamento } from "./enums/metodo-pagamento.js";
-import { Pagamento } from "./entities/pagamento.js";
-import type { MotivoCancelamento } from "./value-object/motivo-cancelamento.js";
-import { StatusPagamento } from "./enums/pagamento.enum.js";
-import { PedidoEntregueEvent } from "./events/pedido-entregue.event.js";
-import { PedidoEnviadoEvent } from "./events/pedido-enviado.event.js";
-import { PedidoCanceladoEvent } from "./events/pedido-cancelado.event.js";
-import { PedidoCriadoEvent } from "./events/pedido-criado.event.js";
+import { EnderecoEntrega } from "../value-object/endereco-entrega.js";
+import { ItemPedido } from "./item-pedido.js";
+import { AggregateRoot } from "../../common/base/aggregate-Root.js";
+import { Guard } from "../../common/validations/guard.js";
+import { StatusPedido } from "../enums/statusPedido.js";
+import type { MetodoPagamento } from "../enums/metodo-pagamento.js";
+import { Pagamento } from "./pagamento.js";
+import type { MotivoCancelamento } from "../value-object/motivo-cancelamento.js";
+import { StatusPagamento } from "../enums/pagamento.enum.js";
+import { PedidoEntregueEvent } from "../events/pedido-entregue.event.js";
+import { PedidoEnviadoEvent } from "../events/pedido-enviado.event.js";
+import { PedidoCanceladoEvent } from "../events/pedido-cancelado.event.js";
+import { PedidoCriadoEvent } from "../events/pedido-criado.event.js";
 
 export class Pedido extends AggregateRoot {
   private motivoCancelamento: MotivoCancelamento | null = null;
