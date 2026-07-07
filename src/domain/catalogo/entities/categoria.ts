@@ -23,7 +23,7 @@ export class Categoria extends Entity {
     Guard.contra(this.ativo === true, "Categoria esta ativa");
     this.ativo = true;
   }
- get getAtivo(): boolean {
+  get getAtivo(): boolean {
     return this.ativo;
   }
   inativar(): void {
