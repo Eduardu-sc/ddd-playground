@@ -6,7 +6,7 @@ import { RemoverItemDoPedidoResultDto } from "./remover-itemDoPedido.resultDto.j
 export class RemoverItemDoPedidoHandler {
   constructor(private readonly _pedidoRepository: IPedidoRepository) {}
 
-  async handle(
+  async executar(
     command: RemoverItemDoPedidoCommand,
   ): Promise<RemoverItemDoPedidoResultDto> {
     const pedido = await this._pedidoRepository.obterPorId(command.pedidoId);
@@ -15,7 +15,7 @@ export class RemoverItemDoPedidoHandler {
       throw new DomainException("Perdido nao encontrado!");
     }
     pedido.removerItem(command.itemId);
-    this._pedidoRepository.atualizar(pedido);
+    await this._pedidoRepository.atualizar(pedido);
 
     return new RemoverItemDoPedidoResultDto(
       pedido.id,

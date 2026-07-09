@@ -5,7 +5,7 @@ import { MarcaPedidoComoEntregueResultDto } from "./marca-PedidoComoEntregue.res
 
 export class MarcaPedidoComoEntregueHandler {
   constructor(private readonly _repositoryPedido: IPedidoRepository) {}
-  async handle(
+  async executar(
     command: MarcaPedidoComoEntregueCommand,
   ): Promise<MarcaPedidoComoEntregueResultDto> {
     const pedido = await this._repositoryPedido.obterPorId(command.pedidoId);
@@ -14,7 +14,7 @@ export class MarcaPedidoComoEntregueHandler {
     }
     pedido.marcarComoEntregue();
 
-    this._repositoryPedido.atualizar(pedido);
+    await this._repositoryPedido.atualizar(pedido);
 
     return new MarcaPedidoComoEntregueResultDto(
       pedido.id,

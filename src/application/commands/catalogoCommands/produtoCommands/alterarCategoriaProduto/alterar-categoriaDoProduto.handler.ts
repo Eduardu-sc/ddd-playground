@@ -10,7 +10,7 @@ export class AlterarCategoriaDoProduto {
     private readonly _repositoryCategoria: ICategoriaRepository,
     private readonly _repositoryProduto: IProdutoRepository,
   ) {}
-  async hadle(
+  async executar(
     command: AlterarCategoriaDoProdutoCommand,
   ): Promise<AlterarCategoriaDoProdutoResultDto> {
     const categoria = await this._repositoryCategoria.obterPorId(

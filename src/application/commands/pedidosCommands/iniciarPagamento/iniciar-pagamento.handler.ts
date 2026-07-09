@@ -6,7 +6,7 @@ import { IniciarPagamentoResultDto } from "./iniciar-pagamento.resultDto.js";
 export class IniciarPagamentoHandler {
   constructor(private readonly _repositoryPedido: IPedidoRepository) {}
 
-  async handler(
+  async executar(
     command: IniciarPagamentoCommand,
   ): Promise<IniciarPagamentoResultDto> {
     const pedido = await this._repositoryPedido.obterPorId(command.pedidoId);

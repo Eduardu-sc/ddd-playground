@@ -12,7 +12,7 @@ export class CriarProdutoHandler {
     private readonly _repositoryProduto: IProdutoRepository,
     private readonly _repositoryCategoria: ICategoriaRepository,
   ) {}
-  async handle(command: CriarProdutoCommand): Promise<CriarProdutoResultDto> {
+  async executar(command: CriarProdutoCommand): Promise<CriarProdutoResultDto> {
     const categoria = await this._repositoryCategoria.obterPorId(
       command.categoriaId,
     );

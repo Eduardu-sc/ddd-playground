@@ -6,7 +6,7 @@ import { AtivarProdutoResultDto } from "./ativar-produto.resultDto.js";
 export class AtivarProdutoHandler {
   constructor(private readonly _repositoryProduto: IProdutoRepository) {}
 
-  async handle(command: AtivarProdutoCommand): Promise<AtivarProdutoResultDto> {
+  async executar(command: AtivarProdutoCommand): Promise<AtivarProdutoResultDto> {
     const produto = await this._repositoryProduto.obterPorId(command.produtoId);
 
     if (produto == null) {

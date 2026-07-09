@@ -6,7 +6,7 @@ import { DomainException } from "../../../../domain/common/exceptions/domain-exc
 export class AdicionarItemAoPedidoHandles {
   constructor(private readonly repositoryPedido: IPedidoRepository) {}
 
-  async handle(
+  async executar(
     command: AdicionarItemAoPedidoCommand,
   ): Promise<AdicionarItemAoPedidoResultDto> {
     const pedido = await this.repositoryPedido.obterPorId(command.pedidoId);

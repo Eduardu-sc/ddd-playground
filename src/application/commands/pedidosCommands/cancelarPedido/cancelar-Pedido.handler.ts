@@ -7,7 +7,7 @@ import { CancelarPedidoResultDto } from "./concelar-pedido.resultDto.js";
 export class CancelarPedidoHandler {
   constructor(private readonly _repositoryPedido: IPedidoRepository) {}
 
-  async handle(
+  async executar(
     command: CancelarPedidoCommand,
   ): Promise<CancelarPedidoResultDto> {
     const pedido = await this._repositoryPedido.obterPorId(command.pedidoId);

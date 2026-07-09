@@ -53,13 +53,13 @@ export class Produto extends Entity {
     this.statusProduto = StatusProduto.ATIVO;
   }
 
-  bloquear(): void {
-    this.statusProduto = StatusProduto.BLOQUEADO;
+  desativar(): void {
+    this.statusProduto = StatusProduto.DESATIVAR;
   }
 
   validarVenda(): void {
-    if (this.statusProduto === StatusProduto.BLOQUEADO) {
-      throw new DomainException("Produto bloqueado não pode ser vendido.");
+    if (this.statusProduto === StatusProduto.DESATIVAR) {
+      throw new DomainException("Produto desativado não pode ser vendido.");
     }
   }
   get getPreco(): number {

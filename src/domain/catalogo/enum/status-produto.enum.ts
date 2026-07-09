@@ -1,4 +1,4 @@
 export enum StatusProduto {
   ATIVO = "ATIVO",
-  BLOQUEADO = "BLOQUEADO",
+  DESATIVAR = "DESATIVAR",
 }

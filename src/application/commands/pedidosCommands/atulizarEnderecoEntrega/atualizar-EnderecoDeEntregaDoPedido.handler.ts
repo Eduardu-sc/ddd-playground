@@ -5,7 +5,7 @@ import type { AtualizarEnderecoEntregaDoPedidoCommand } from "./atualizar-Endere
 
 export class AtualizaEnderecoEntregaDoPedidoHandler {
   constructor(private readonly _pedidoRepository: IPedidoRepository) {}
-  async handle(
+  async executar(
     command: AtualizarEnderecoEntregaDoPedidoCommand,
   ): Promise<AtualizarEnderecoEntregaDoPedidoResultDto> {
     const pedido = await this._pedidoRepository.obterPorId(command.pedidoId);
