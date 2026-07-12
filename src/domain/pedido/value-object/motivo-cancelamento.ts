@@ -1,10 +1,13 @@
+import { ValueObject } from "../../common/base/value-object.js";
 import { Guard } from "../../common/validations/guard.js";
 
-export class MotivoCancelamento {
+export class MotivoCancelamento extends ValueObject {
   private constructor(
     public readonly codigo: number,
     public readonly descricao: string,
-  ) {}
+  ) {
+    super();
+  }
 
   static readonly CLIENTE_DESISTIU = new MotivoCancelamento(
     1,
@@ -60,5 +63,8 @@ export class MotivoCancelamento {
 
   toString(): string {
     return this.descricao;
+  }
+  protected getEqualityComponents(): readonly unknown[] {
+    return [this.codigo];
   }
 }

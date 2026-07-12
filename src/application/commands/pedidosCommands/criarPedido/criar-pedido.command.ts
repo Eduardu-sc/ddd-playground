@@ -3,6 +3,6 @@ import type { EnderecoEntrega } from "../../../../domain/pedido/value-object/end
 export class CriarPedidoCommand {
   constructor(
     public readonly clienteId: number,
-    public readonly enderecoEntrega: EnderecoEntrega,
+    public readonly enderecoId: number,
   ) {}
 }
