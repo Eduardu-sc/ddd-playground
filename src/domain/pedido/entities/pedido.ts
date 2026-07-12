@@ -11,6 +11,7 @@ import { PedidoEntregueEvent } from "../events/pedido-entregue.event.js";
 import { PedidoEnviadoEvent } from "../events/pedido-enviado.event.js";
 import { PedidoCanceladoEvent } from "../events/pedido-cancelado.event.js";
 import { PedidoCriadoEvent } from "../events/pedido-criado.event.js";
+import { PedidoSeparadoEvent } from "../events/pedido-separado.event.js";
 
 export class Pedido extends AggregateRoot {
   private motivoCancelamento: MotivoCancelamento | null = null;
@@ -61,7 +62,7 @@ export class Pedido extends AggregateRoot {
     Guard.contra(this.pagamento == null, "pedido nao posui pagamento");
     Guard.contra(
       this.statusPedido !== StatusPedido.PENDENTE,
-      "Somente pedidos pendentes podem ser cancelados.",
+      "Somente pedidos pendentes podem ser enviado.",
     );
     Guard.contra(
       this.pagamento?.getStatusDoPagamento() !== StatusPagamento.APROVADO,
@@ -70,6 +71,16 @@ export class Pedido extends AggregateRoot {
     this.statusPedido = StatusPedido.ENVIADO;
     this.marcaComoAlterado();
     this.addDomainEvent(new PedidoEnviadoEvent(this.id, this.parceiroId));
+  }
+  marcarComoSeparado(): void {
+    Guard.contra(this.pagamento == null, "pedido nao possui pagamento");
+    Guard.contra(
+      this.statusPedido !== StatusPedido.PENDENTE,
+      "Somente pedidos pendentes podem ser separado.",
+    );
+    this.statusPedido = StatusPedido.SEPARAPARADO;
+    this.marcaComoAlterado();
+    this.addDomainEvent(new PedidoSeparadoEvent(this.id, this.parceiroId));
   }
 
   cancelar(motivo: MotivoCancelamento): void {
@@ -140,7 +151,7 @@ export class Pedido extends AggregateRoot {
       this.statusPedido !== StatusPedido.PENDENTE,
       "itens so pode ser removido caso o pedido esteja pendente",
     );
-    
+
     const indice = this.itens.findIndex((item) => item.id === itemId);
 
     Guard.contra(indice === -1, "Item não encontrado");
