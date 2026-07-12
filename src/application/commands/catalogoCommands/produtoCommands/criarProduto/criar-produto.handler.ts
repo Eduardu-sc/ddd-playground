@@ -1,4 +1,5 @@
 import { Produto } from "../../../../../domain/catalogo/entities/produto.js";
+import { StatusCategoria } from "../../../../../domain/catalogo/enum/status-categoria.enum.js";
 import { NomeProduto } from "../../../../../domain/catalogo/value-object/nomeProduto.js";
 import { DomainException } from "../../../../../domain/common/exceptions/domain-exception.js";
 import { Guard } from "../../../../../domain/common/validations/guard.js";
@@ -16,20 +17,24 @@ export class CriarProdutoHandler {
     const categoria = await this._repositoryCategoria.obterPorId(
       command.categoriaId,
     );
-    if (categoria == null) {
-      throw new DomainException("Categoria nao encontrada.");
-    }
-    Guard.contra(
-      !categoria.getAtivo,
-      "Nao e possivel criar um produto em categoria Desativada",
-    );
-    const nome = NomeProduto.criar(command.nome);
 
+    if (categoria == null) {
+      throw new DomainException("Categoria não encontrada.");
+    }
+
+    Guard.contra(
+      categoria.getAtivo === StatusCategoria.DESATIVADO,
+      "Não é possível criar um produto em uma categoria desativada.",
+    );
+
+    const nome = NomeProduto.criar(command.nome);
     const produto = Produto.criar(nome, command.preco, command.categoriaId);
-    await this._repositoryProduto.atualizar(produto);
+
+    await this._repositoryProduto.adicionar(produto);
+
     return new CriarProdutoResultDto(
       produto.id,
-      command.nome,
+      command.nome.trim(),
       produto.getPreco,
       produto.getStatus.toString(),
     );

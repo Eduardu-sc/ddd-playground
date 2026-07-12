@@ -1,3 +1,3 @@
-export class DesativarProdutoCommand{
-    constructor(public readonly produtoId:number){}
+export class DesativarProdutoCommand {
+  constructor(public readonly produtoId: number) {}
 }

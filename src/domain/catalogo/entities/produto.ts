@@ -2,6 +2,7 @@ import { Entity } from "../../common/base/entity.js";
 import { DomainException } from "../../common/exceptions/domain-exception.js";
 import { Guard } from "../../common/validations/guard.js";
 import { StatusProduto } from "../enum/status-produto.enum.js";
+import { EstoqueAjustadoEvent } from "../events/estoqueAjustado.events.js";
 import { NomeProduto } from "../value-object/nomeProduto.js";
 
 export class Produto extends Entity {
@@ -10,7 +11,9 @@ export class Produto extends Entity {
     private nome: NomeProduto,
     private preco: number,
     private statusProduto: StatusProduto,
+
     private categoriaId: number,
+    private estoque: number = 0,
   ) {
     super(id);
 
@@ -25,12 +28,32 @@ export class Produto extends Entity {
     Guard.contraEmptyNumber(this.categoriaId, "Categoria deve ser informada.");
   }
 
-  static criar(nome: NomeProduto, preco: number, categoriaId: number): Produto {
+  static criar(
+    nome: NomeProduto,
+    preco: number,
+    categoriaId: number,
+    estoqueInicial: number,
+  ): Produto {
     const idNovo = Math.random();
 
-    return new Produto(idNovo, nome, preco, StatusProduto.ATIVO, categoriaId);
+    return new Produto(
+      idNovo,
+      nome,
+      preco,
+      StatusProduto.ATIVO,
+      categoriaId,
+      estoqueInicial,
+    );
   }
-
+  ajustarEstoque(quantidade: number, motivo: string): void {
+    Guard.contra(
+      this.estoque + quantidade < 0,
+      "O estoque não pode ficar negativo.",
+    );
+    this.estoque += quantidade;
+    this.dataAtualizacao;
+    this.addDomainEvent(new EstoqueAjustadoEvent(this.id, quantidade, motivo));
+  }
   alterarNome(nome: string): void {
     this.nome = NomeProduto.criar(nome);
   }
