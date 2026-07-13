@@ -1,5 +1,5 @@
 import { EnderecoEntrega } from "../../value-object/endereco-entrega.js";
-import type { EnderecoDto } from "./EnderecoDto.js";
+import type { EnderecoDto } from "./enderecoDto.js";
 
 export class ClienteAcl {
   public traduzirEndereco(dto: EnderecoDto) {
@@ -11,7 +11,7 @@ export class ClienteAcl {
       dto.uf,
       dto.cidade,
       dto.pais,
-      dto.numero
+      dto.numero,
     );
   }
 }

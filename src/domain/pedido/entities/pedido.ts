@@ -140,7 +140,7 @@ export class Pedido extends AggregateRoot {
       this.statusPedido !== StatusPedido.PENDENTE,
       "itens so pode ser removido caso o pedido esteja pendente",
     );
-
+    
     const indice = this.itens.findIndex((item) => item.id === itemId);
 
     Guard.contra(indice === -1, "Item não encontrado");

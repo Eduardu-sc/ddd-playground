@@ -1,4 +1,6 @@
-import type { EnderecoDto } from "./EnderecoDto.js";
+import type { EnderecoDto } from "./enderecoDto.js";
+
+
 
 export interface IClienteGateway {
   obterEndereco(

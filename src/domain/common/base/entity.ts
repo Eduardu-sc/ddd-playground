@@ -5,7 +5,7 @@ export abstract class Entity {
   protected constructor(
     public readonly id: number,
     public readonly dataCriacao: Date = new Date(),
-    public dataAtualizacao: Date = new Date(),
+    private dataAtualizacao: Date = new Date(),
   ) {}
 
   public getDomainEvents(): readonly IDomainEvent[] {
