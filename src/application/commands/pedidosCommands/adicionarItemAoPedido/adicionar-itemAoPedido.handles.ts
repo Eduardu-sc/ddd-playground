@@ -43,7 +43,7 @@ export class AdicionarItemAoPedidoHandler {
     return new AdicionarItemAoPedidoResultDto(
       pedido.id,
       pedido.total(),
-      pedido.getStatusPedido.toString(),
+      pedido.getStatusPedido().toString(),
     );
   }
 }

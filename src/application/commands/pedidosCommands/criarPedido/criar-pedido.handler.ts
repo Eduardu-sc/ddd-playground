@@ -35,7 +35,7 @@ export class CriarPedidoCommandHandler {
       pedido.numeroPedido,
       pedido.dataCriacao,
       pedido.total(),
-      pedido.getStatusPedido(),
+      pedido.getStatusPedido().toString(),
     );
   }
 }

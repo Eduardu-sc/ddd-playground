@@ -167,7 +167,7 @@ export class Pedido extends AggregateRoot {
     return this.statusPedido;
   }
 
-  getItens(): readonly ItemPedido[] {
+  getItens(): ItemPedido[] {
     return this.itens;
   }
 

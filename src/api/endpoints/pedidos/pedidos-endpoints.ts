@@ -55,7 +55,7 @@ export function pedidoRouter(container: ReturnType<typeof criarContainer>) {
       valorTotal: p.total(),
       status: p.getStatusPedido().toString(),
       dataCriacao: p.dataCriacao,
-      totalItens: p.getItens.length,
+      totalItens: p.getItens().length,
     }));
     return res.status(200).json(resultado);
   });
