@@ -3,14 +3,14 @@ import { Guard } from "../../common/validations/guard.js";
 
 export class EnderecoEntrega extends ValueObject {
   private constructor(
-    private readonly cep: string,
-    private readonly logradouro: string,
-    private readonly bairro: string,
-    private readonly complemento: string,
-    private readonly uf: string,
-    private readonly cidade: string,
-    private readonly pais: string,
-    private readonly numero: string,
+    public readonly cep: string,
+    public readonly logradouro: string,
+    public readonly bairro: string,
+    public readonly complemento: string,
+    public readonly uf: string,
+    public readonly cidade: string,
+    public readonly pais: string,
+    public readonly numero: string,
   ) {
     super();
     Guard.contraNullWhiteSpace(cep, "cep Deve ser informado!");

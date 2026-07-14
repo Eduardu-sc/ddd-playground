@@ -6,12 +6,12 @@ export class ItemPedido extends Entity {
 
   constructor(
     public readonly id: number,
-    public readonly produto: string,
+    public readonly nome: string,
     public quantidade: number,
     public valorUnitario: number,
   ) {
     super(id);
-    Guard.contraEmpty(produto, "Produto é obrigatório");
+    Guard.contraEmpty(nome, "Produto é obrigatório");
     Guard.contra(quantidade <= 0, "Quantidade deve ser maior que zero");
     Guard.contraValorNegativo(
       valorUnitario,

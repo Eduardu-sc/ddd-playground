@@ -12,7 +12,8 @@ export class CriarPedidoCommandHandler {
     private readonly _clienteGateway: IClienteGateway,
     private readonly _clienteAcl: ClienteAcl,
   ) {}
-  async handle(command: CriarPedidoCommand): Promise<CriarPedidoResultDto> {
+
+  async executar(command: CriarPedidoCommand): Promise<CriarPedidoResultDto> {
     //buscar endereco diretamente  no BC Cliente (upstream)
     const enderecoDto = await this._clienteGateway.obterEndereco(
       command.clienteId,

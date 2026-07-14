@@ -72,13 +72,13 @@ export class Pedido extends AggregateRoot {
     this.marcaComoAlterado();
     this.addDomainEvent(new PedidoEnviadoEvent(this.id, this.parceiroId));
   }
-  marcarComoSeparado(): void {
+  marcarComoEmSeparado(): void {
     Guard.contra(this.pagamento == null, "pedido nao possui pagamento");
     Guard.contra(
       this.statusPedido !== StatusPedido.PENDENTE,
       "Somente pedidos pendentes podem ser separado.",
     );
-    this.statusPedido = StatusPedido.SEPARAPARADO;
+    this.statusPedido = StatusPedido.EMSEPACAO;
     this.marcaComoAlterado();
     this.addDomainEvent(new PedidoSeparadoEvent(this.id, this.parceiroId));
   }
@@ -113,7 +113,7 @@ export class Pedido extends AggregateRoot {
     this.marcaComoAlterado();
     return pagamento;
   }
-  getEnderecoEntrega(): EnderecoEntrega {
+  get getEnderecoEntrega(): EnderecoEntrega {
     return this.enderecoEntrega;
   }
   atualizarEnderecoEntrega(novoEndereco: EnderecoEntrega) {
@@ -177,5 +177,8 @@ export class Pedido extends AggregateRoot {
 
   total(): number {
     return this.itens.reduce((total, item) => total + item.calcularTotal(), 0);
+  }
+  getPagamento(): Pagamento | null {
+    return this.pagamento;
   }
 }

@@ -1,7 +1,7 @@
 import { DomainException } from "../../../../domain/common/exceptions/domain-exception.js";
 import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido-repository.js";
 import type { MarcaPedidoComoEntregueCommand } from "./marca-PedidoComoEntregue.command.js";
-import { MarcaPedidoComoEntregueResultDto } from "./marca-PedidoComoEntregue.resultDto.js";
+import { MarcaPedidoComoEntregueResultDto } from "./marca-PedidoComEntregue.resultDto.js";
 
 export class MarcaPedidoComoEntregueHandler {
   constructor(private readonly _repositoryPedido: IPedidoRepository) {}
