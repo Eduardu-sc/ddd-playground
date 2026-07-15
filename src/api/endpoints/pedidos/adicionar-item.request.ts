@@ -4,3 +4,6 @@ export class AdicionarItemRequest {
     public readonly quantidade: number,
   ) {}
 }
+export class AdicionarItemParams {
+  constructor(public readonly id: string) {}
+}

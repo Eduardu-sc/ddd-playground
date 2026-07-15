@@ -1,8 +1,24 @@
-import { Router } from "express";
+import { Router, type Request, type Response } from "express";
 import type { criarContainer } from "../../../infrastructure/fakes/fake-infrastructure-extensions.js";
 import { CriarPedidoCommand } from "../../../application/commands/pedidosCommands/criarPedido/criar-pedido.command.js";
 import { DomainException } from "../../../domain/common/exceptions/domain-exception.js";
 import { AdicionarItemAoPedidoCommand } from "../../../application/commands/pedidosCommands/adicionarItemAoPedido/adicionar-itemAoPedido.command.js";
+import { AtualizarEnderecoEntregaDoPedidoCommand } from "../../../application/commands/pedidosCommands/atulizarEnderecoEntrega/atualizar-EnderecoDeEntregaDoPedido.command.js";
+import type { CriarPedidoRequest } from "./criar-pedido.request.js";
+import type {
+  AdicionarItemParams,
+  AdicionarItemRequest,
+} from "./adicionar-item.request.js";
+import type {
+  IniciarPagamentoParams,
+  IniciarPagamentoRequest,
+} from "./iniciar-pagamento.request.js";
+import { IniciarPagamentoCommand } from "../../../application/commands/pedidosCommands/iniciarPagamento/iniciar-pagamento.command.js";
+import { MetodoPagamento } from "../../../domain/pedido/enums/metodo-pagamento.js";
+import type {
+  ConfirmarPagamentoParams,
+  ConfirmarPagamentoRequest,
+} from "./confirmar-pagamento.request.js";
 
 export function pedidoRouter(container: ReturnType<typeof criarContainer>) {
   const router = Router();
@@ -103,7 +119,7 @@ export function pedidoRouter(container: ReturnType<typeof criarContainer>) {
     return res.status(200).json(resultado);
   });
 
-  router.post("/", async (req, res) => {
+  router.post("/", async (req: Request<{}, {}, CriarPedidoRequest>, res) => {
     try {
       const command = new CriarPedidoCommand(
         req.body.clienteId,
@@ -134,36 +150,102 @@ export function pedidoRouter(container: ReturnType<typeof criarContainer>) {
     }
   });
 
-  router.post("/:id/itens", async (req, res) => {
-    try {
-      console.log("passou aqui");
-      const command = new AdicionarItemAoPedidoCommand(
-        Number(req.params.id),
-        req.body.produtoId,
-        req.body.quantidade,
-      );
+  router.post(
+    "/:id/itens",
+    async (
+      req: Request<AdicionarItemParams, {}, AdicionarItemRequest>,
+      res: Response,
+    ) => {
+      try {
+        const command = new AdicionarItemAoPedidoCommand(
+          Number(req.params.id),
+          req.body.produtoId,
+          req.body.quantidade,
+        );
 
-      const resultado =
-        await container.handlers.adicionarItemHandler.executar(command);
-      return res
-        .status(201)
-        .location(`/pedidos/${resultado.pedidoId}`)
-        .json(resultado);
-    } catch (error) {
-      if (error instanceof DomainException) {
-        return res.status(422).json({
-          erro: error.message,
+        const resultado =
+          await container.handlers.adicionarItemHandler.executar(command);
+        return res
+          .status(201)
+          .location(`/pedidos/${resultado.pedidoId}`)
+          .json(resultado);
+      } catch (error) {
+        if (error instanceof DomainException) {
+          return res.status(422).json({
+            erro: error.message,
+          });
+        }
+        if (error instanceof Error) {
+          return res.status(404).json({
+            erro: error.message,
+          });
+        }
+        return res.status(500).json({
+          erro: "erro interno",
         });
       }
-      if (error instanceof Error) {
-        return res.status(404).json({
-          erro: error.message,
+    },
+  );
+
+  router.post(
+    "/:id/pagamento",
+    async (
+      req: Request<IniciarPagamentoParams, {}, IniciarPagamentoRequest>,
+      res,
+    ) => {
+      try {
+        console.log(req.params.id);
+        const metado = req.body.metodoPagamento as MetodoPagamento;
+        const command = new IniciarPagamentoCommand(
+          Number(req.params.id),
+          metado,
+        );
+
+        const resultado =
+          await container.handlers.iniciarPagamentoHandler.executar(command);
+        return res.status(200).json(resultado);
+      } catch (error) {
+        if (error instanceof DomainException) {
+          return res.status(422).json({
+            erro: error.message,
+          });
+        }
+        if (error instanceof Error) {
+          return res.status(404).json({
+            erro: error.message,
+          });
+        }
+        return res.status(500).json({
+          erro: "erro interno",
         });
       }
-      return res.status(500).json({
-        erro: "erro interno",
-      });
-    }
-  });
+    },
+  );
+  router.post(
+    "/:id/pagamento/comfirmar",
+    async (
+      req: Request<ConfirmarPagamentoParams, {}, ConfirmarPagamentoRequest>,
+      res: Response,
+    ) => {
+      try {
+        const pedido = await container.repositories.pedidoRepository.obterPorId(
+          req.params.id,
+        );
+        if (pedido == null)
+          return res.status(404).json("Pedido nao localizado");
+        //simulando o retorno gateway
+        const pagamento = pedido.getPagamento();
+
+        if (pagamento == null) {
+          return res.status(404).json({
+            erro: "Pagamento não encontrado",
+          });
+          //ainda nao tem
+          //        pagamento.gerarCodigoTransacaoLocal();
+          pagamento?.confirmar;
+        }
+      } catch (error) {}
+    },
+  );
   return router;
 }

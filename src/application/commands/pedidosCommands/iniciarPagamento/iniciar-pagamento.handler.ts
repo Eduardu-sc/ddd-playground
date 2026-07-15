@@ -9,6 +9,7 @@ export class IniciarPagamentoHandler {
   async executar(
     command: IniciarPagamentoCommand,
   ): Promise<IniciarPagamentoResultDto> {
+    console.log(command);
     const pedido = await this._repositoryPedido.obterPorId(command.pedidoId);
 
     if (pedido == null) {

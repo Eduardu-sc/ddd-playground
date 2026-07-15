@@ -1,5 +1,6 @@
 import { AdicionarItemAoPedidoHandler } from "../../application/commands/pedidosCommands/adicionarItemAoPedido/adicionar-itemAoPedido.handles.js";
 import { CriarPedidoCommandHandler } from "../../application/commands/pedidosCommands/criarPedido/criar-pedido.handler.js";
+import { IniciarPagamentoHandler } from "../../application/commands/pedidosCommands/iniciarPagamento/iniciar-pagamento.handler.js";
 import { CatalogoAcl } from "../../domain/pedido/integration/catalogo/catalogo-acl.js";
 import { ClienteAcl } from "../../domain/pedido/integration/cliente/cliente-acl.js";
 import { FakeCatalogoGateway } from "./fake-catalogo-gateway.js";
@@ -42,6 +43,7 @@ export function criarContainer() {
     catalogoGateway,
     catalogoAcl,
   );
+  const iniciarPagamentoHandler = new IniciarPagamentoHandler(pedidoRepository);
 
   return {
     repositories: {
@@ -61,6 +63,7 @@ export function criarContainer() {
     handlers: {
       criarPedidoHandler,
       adicionarItemHandler,
+      iniciarPagamentoHandler,
     },
   };
 }

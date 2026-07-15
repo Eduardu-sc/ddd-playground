@@ -1,5 +1,5 @@
 export enum MetodoPagamento {
-  PIX = "PIX",
-  BOLETO = "BOLETO",
-  DINHEIRO = "DINHEIRO",
+  PIX = 0,
+  BOLETO = 1,
+  DINHEIRO = 2,
 }
