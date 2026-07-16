@@ -13,12 +13,23 @@ import { PedidoCanceladoEvent } from "../events/pedido-cancelado.event.js";
 import { PedidoCriadoEvent } from "../events/pedido-criado.event.js";
 import { PedidoSeparadoEvent } from "../events/pedido-separado.event.js";
 
+type ReconstituirPedidoProps = {
+  id: number;
+  numeroPedido: string;
+  parceiroId: number;
+  enderecoEntrega: EnderecoEntrega;
+  statusPedido: StatusPedido;
+  itens: ItemPedido[];
+  dataCriacao: Date;
+  dataAtualizacao: Date;
+};
+
 export class Pedido extends AggregateRoot {
   private motivoCancelamento: MotivoCancelamento | null = null;
   private pagamento: Pagamento | null = null;
 
   private constructor(
-    id: number | null,
+    id: number,
     public readonly numeroPedido: string,
     public readonly parceiroId: number,
     private enderecoEntrega: EnderecoEntrega,
@@ -29,14 +40,14 @@ export class Pedido extends AggregateRoot {
     Guard.contraEmptyNumber(parceiroId, "Parceiro é obrigatório");
     Guard.contra(!enderecoEntrega, "Endereço de entrega é obrigatório");
     // tem que coloca o id aqui mais ele ainda esta null
-    super(0);
+    super(id);
   }
 
   static criar(parceiroId: number, enderecoEntrega: EnderecoEntrega): Pedido {
     // const id = Math.floor(Math.random() * 100000);
     // const numeroPedido = `PED-${id}`;
     const pedido = new Pedido(
-      null,
+      0,
       "",
       parceiroId,
       enderecoEntrega,
@@ -47,6 +58,10 @@ export class Pedido extends AggregateRoot {
     pedido.addDomainEvent(new PedidoCriadoEvent(pedido.id, pedido.parceiroId));
     return pedido;
   }
+  static reconstituir(props: ReconstituirPedidoProps): Pedido {
+    throw new Error("Not implemented");
+  }
+
   marcarComoEntregue(): void {
     Guard.contra(
       this.statusPedido !== StatusPedido.ENVIADO,

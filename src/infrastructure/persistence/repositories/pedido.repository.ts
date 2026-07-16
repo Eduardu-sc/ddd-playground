@@ -1,37 +1,56 @@
-import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { eq } from "drizzle-orm";
+import type { IPedidoRepository } from "../../../application/abstrations/persistence/ipedido-repository.js";
+import type { Pedido } from "../../../domain/pedido/entities/pedido.js";
+import { AppDatabase } from "../config/database.js";
+import { pedidos } from "../schema/pedido.table.js";
 
-export const pedidos = sqliteTable("pedidos", {
-  // Pedido
-  id: integer("id").primaryKey(),
+export class PedidoRepository implements IPedidoRepository {
+  private readonly db = AppDatabase.db;
+  async adicionar(pedido: Pedido): Promise<void> {
+    const endereco = pedido.getEnderecoEntrega;
+    await this.db.insert(pedidos).values({
+      numeroPedido: pedido.numeroPedido,
+      parceiroId: pedido.parceiroId,
+      statusPedido: pedido.getStatusPedido(),
+      dataCriacao: pedido.dataCriacao,
+      dataAtualizacao: pedido.getDataAtualizacao,
+      enderecoCep: endereco.cep,
+      enderecoLogradouro: endereco.logradouro,
+      enderecoNumero: endereco.numero,
+      enderecoComplemento: endereco.complemento,
+      enderecoBairro: endereco.bairro,
+      enderecoCidade: endereco.cidade,
+      enderecoUf: endereco.uf,
+      enderecoPais: endereco.pais,
+    });
+  }
+  async atualizar(pedido: Pedido): Promise<void> {
+    const endereco = pedido.getEnderecoEntrega;
 
-  numeroPedido: text("numero_pedido").notNull(),
+    await this.db
+      .update(pedidos)
+      .set({
+        numeroPedido: pedido.numeroPedido,
+        parceiroId: pedido.parceiroId,
+        statusPedido: pedido.getStatusPedido(),
+        dataAtualizacao: pedido.getDataAtualizacao,
 
-  parceiroId: integer("parceiro_id").notNull(),
-
-  statusPedido: text("status_pedido").notNull(),
-
-  dataCriacao: integer("data_criacao", {
-    mode: "timestamp",
-  }).notNull(),
-
-  dataAtualizacao: integer("data_atualizacao", {
-    mode: "timestamp",
-  }),
-
-  // Endereço de Entrega (Value Object)
-  enderecoCep: text("endereco_cep").notNull(),
-
-  enderecoLogradouro: text("endereco_logradouro").notNull(),
-
-  enderecoNumero: text("endereco_numero").notNull(),
-
-  enderecoComplemento: text("endereco_complemento"),
-
-  enderecoBairro: text("endereco_bairro").notNull(),
-
-  enderecoCidade: text("endereco_cidade").notNull(),
-
-  enderecoUf: text("endereco_uf", { length: 2 }).notNull(),
-
-  enderecoPais: text("endereco_pais").notNull(),
-});
+        enderecoCep: endereco.cep,
+        enderecoLogradouro: endereco.logradouro,
+        enderecoNumero: endereco.numero,
+        enderecoComplemento:
+          endereco.complemento === "" ? null : endereco.complemento,
+        enderecoBairro: endereco.bairro,
+        enderecoCidade: endereco.cidade,
+        enderecoUf: endereco.uf,
+        enderecoPais: endereco.pais,
+      })
+      .where(eq(pedidos.id, pedido.id));
+  }
+  async listarTodos(): Promise<readonly Pedido[]> {
+    return;
+  }
+  async obterPorId(id: number): Promise<Pedido | null> {
+    return;
+  }
+}
