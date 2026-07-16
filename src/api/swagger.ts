@@ -104,6 +104,35 @@ export const openApiDocument = {
         },
       },
     },
+    "/pedidos/{id}/endereco-entrega": {
+      patch: {
+        tags: ["Pedidos"],
+        summary: "Atualiza o endereco de entrega do pedido",
+        operationId: "atualizarEnderecoEntregaDoPedido",
+        parameters: [{ $ref: "#/components/parameters/PedidoId" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/Endereco" },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: "Endereco atualizado",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/StatusPedidoResponse" },
+              },
+            },
+          },
+          404: { $ref: "#/components/responses/NaoEncontrado" },
+          422: { $ref: "#/components/responses/RegraDeNegocio" },
+          500: { $ref: "#/components/responses/ErroInterno" },
+        },
+      },
+    },
     "/pedidos/{id}/itens": {
       post: {
         tags: ["Pedidos"],
@@ -130,6 +159,30 @@ export const openApiDocument = {
             content: {
               "application/json": {
                 schema: { $ref: "#/components/schemas/AdicionarItemResponse" },
+              },
+            },
+          },
+          404: { $ref: "#/components/responses/NaoEncontrado" },
+          422: { $ref: "#/components/responses/RegraDeNegocio" },
+          500: { $ref: "#/components/responses/ErroInterno" },
+        },
+      },
+    },
+    "/pedidos/{id}/itens/{itemId}": {
+      delete: {
+        tags: ["Pedidos"],
+        summary: "Remove um item do pedido",
+        operationId: "removerItemDoPedido",
+        parameters: [
+          { $ref: "#/components/parameters/PedidoId" },
+          { $ref: "#/components/parameters/ItemId" },
+        ],
+        responses: {
+          200: {
+            description: "Item removido",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/RemoverItemResponse" },
               },
             },
           },
@@ -194,6 +247,98 @@ export const openApiDocument = {
         },
       },
     },
+    "/pedidos/{id}/cancelar": {
+      post: {
+        tags: ["Pedidos"],
+        summary: "Cancela um pedido",
+        operationId: "cancelarPedido",
+        parameters: [{ $ref: "#/components/parameters/PedidoId" }],
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: { $ref: "#/components/schemas/CancelarPedidoRequest" },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: "Pedido cancelado",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/StatusPedidoResponse" },
+              },
+            },
+          },
+          404: { $ref: "#/components/responses/NaoEncontrado" },
+          422: { $ref: "#/components/responses/RegraDeNegocio" },
+          500: { $ref: "#/components/responses/ErroInterno" },
+        },
+      },
+    },
+    "/pedidos/{id}/separar": {
+      post: {
+        tags: ["Pedidos"],
+        summary: "Marca o pedido como em separacao",
+        operationId: "marcarPedidoComoEmSeparacao",
+        parameters: [{ $ref: "#/components/parameters/PedidoId" }],
+        responses: {
+          200: {
+            description: "Pedido marcado como em separacao",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/StatusPedidoResponse" },
+              },
+            },
+          },
+          404: { $ref: "#/components/responses/NaoEncontrado" },
+          422: { $ref: "#/components/responses/RegraDeNegocio" },
+          500: { $ref: "#/components/responses/ErroInterno" },
+        },
+      },
+    },
+    "/pedidos/{id}/enviar": {
+      post: {
+        tags: ["Pedidos"],
+        summary: "Marca o pedido como enviado",
+        operationId: "marcarPedidoComoEnviado",
+        parameters: [{ $ref: "#/components/parameters/PedidoId" }],
+        responses: {
+          200: {
+            description: "Pedido marcado como enviado",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/StatusPedidoResponse" },
+              },
+            },
+          },
+          404: { $ref: "#/components/responses/NaoEncontrado" },
+          422: { $ref: "#/components/responses/RegraDeNegocio" },
+          500: { $ref: "#/components/responses/ErroInterno" },
+        },
+      },
+    },
+    "/pedidos/{id}/entregar": {
+      post: {
+        tags: ["Pedidos"],
+        summary: "Marca o pedido como entregue",
+        operationId: "marcarPedidoComoEntregue",
+        parameters: [{ $ref: "#/components/parameters/PedidoId" }],
+        responses: {
+          200: {
+            description: "Pedido marcado como entregue",
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/StatusPedidoResponse" },
+              },
+            },
+          },
+          404: { $ref: "#/components/responses/NaoEncontrado" },
+          422: { $ref: "#/components/responses/RegraDeNegocio" },
+          500: { $ref: "#/components/responses/ErroInterno" },
+        },
+      },
+    },
   },
   components: {
     parameters: {
@@ -202,6 +347,13 @@ export const openApiDocument = {
         in: "path",
         required: true,
         description: "ID do pedido",
+        schema: { type: "integer", format: "int32", minimum: 1, example: 1 },
+      },
+      ItemId: {
+        name: "itemId",
+        in: "path",
+        required: true,
+        description: "ID do item do pedido",
         schema: { type: "integer", format: "int32", minimum: 1, example: 1 },
       },
     },
@@ -274,6 +426,17 @@ export const openApiDocument = {
           pagamentoId: { type: "integer", minimum: 1, example: 1 },
         },
       },
+      CancelarPedidoRequest: {
+        type: "object",
+        required: ["codigoMotivo"],
+        properties: {
+          codigoMotivo: {
+            type: "integer",
+            enum: [1, 2, 3, 4, 5, 6, 7, 99],
+            example: 1,
+          },
+        },
+      },
       CriarPedidoResponse: {
         type: "object",
         required: [
@@ -317,6 +480,23 @@ export const openApiDocument = {
             enum: ["PENDENTE", "APROVADO", "REJEITADO"],
             example: "PENDENTE",
           },
+        },
+      },
+      StatusPedidoResponse: {
+        type: "object",
+        required: ["pedidoId", "statusPedido"],
+        properties: {
+          pedidoId: { type: "integer", example: 1 },
+          statusPedido: { $ref: "#/components/schemas/StatusPedido" },
+        },
+      },
+      RemoverItemResponse: {
+        type: "object",
+        required: ["pedidoId", "valorTotal", "pedidoStatus"],
+        properties: {
+          pedidoId: { type: "integer", example: 1 },
+          valorTotal: { type: "number", format: "double", example: 8500 },
+          pedidoStatus: { $ref: "#/components/schemas/StatusPedido" },
         },
       },
       PedidoResumo: {

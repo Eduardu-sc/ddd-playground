@@ -16,8 +16,9 @@ import { PedidoSeparadoEvent } from "../events/pedido-separado.event.js";
 export class Pedido extends AggregateRoot {
   private motivoCancelamento: MotivoCancelamento | null = null;
   private pagamento: Pagamento | null = null;
+
   private constructor(
-    public readonly id: number,
+    id: number | null,
     public readonly numeroPedido: string,
     public readonly parceiroId: number,
     private enderecoEntrega: EnderecoEntrega,
@@ -25,19 +26,18 @@ export class Pedido extends AggregateRoot {
 
     private readonly itens: ItemPedido[],
   ) {
-    Guard.contraEmptyNumber(id, "Id é obrigatório");
     Guard.contraEmptyNumber(parceiroId, "Parceiro é obrigatório");
     Guard.contra(!enderecoEntrega, "Endereço de entrega é obrigatório");
-
-    super(id);
+    // tem que coloca o id aqui mais ele ainda esta null
+    super(0);
   }
 
   static criar(parceiroId: number, enderecoEntrega: EnderecoEntrega): Pedido {
-    const id = Math.floor(Math.random() * 100000);
-    const numeroPedido = `PED-${id}`;
+    // const id = Math.floor(Math.random() * 100000);
+    // const numeroPedido = `PED-${id}`;
     const pedido = new Pedido(
-      id,
-      numeroPedido,
+      null,
+      "",
       parceiroId,
       enderecoEntrega,
 

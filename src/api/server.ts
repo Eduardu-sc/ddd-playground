@@ -2,8 +2,12 @@ import express from "express";
 import { pedidoRouter } from "./endpoints/pedidos/pedidos-endpoints.js";
 import { criarContainer } from "../infrastructure/fakes/fake-infrastructure-extensions.js";
 import { configurarSwagger } from "./swagger.js";
+import { AppDatabase } from "../infrastructure/persistence/config/database.js";
 
 const app = express();
+AppDatabase.conectar();
+AppDatabase.executarMigrations();
+
 const container = criarContainer();
 app.use(express.json());
 configurarSwagger(app);

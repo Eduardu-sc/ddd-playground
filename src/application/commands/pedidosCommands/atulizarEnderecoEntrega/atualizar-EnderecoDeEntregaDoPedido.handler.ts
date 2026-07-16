@@ -20,7 +20,7 @@ export class AtualizaEnderecoEntregaDoPedidoHandler {
     return new AtualizarEnderecoEntregaDoPedidoResultDto(
       pedido.id,
       pedido.getEnderecoEntrega.toString(),
-      pedido.getStatusPedido.toString(),
+      pedido.getStatusPedido().toString(),
     );
   }
 }

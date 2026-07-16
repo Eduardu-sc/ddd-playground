@@ -4,6 +4,13 @@ import { CriarPedidoCommand } from "../../../application/commands/pedidosCommand
 import { DomainException } from "../../../domain/common/exceptions/domain-exception.js";
 import { AdicionarItemAoPedidoCommand } from "../../../application/commands/pedidosCommands/adicionarItemAoPedido/adicionar-itemAoPedido.command.js";
 import { AtualizarEnderecoEntregaDoPedidoCommand } from "../../../application/commands/pedidosCommands/atulizarEnderecoEntrega/atualizar-EnderecoDeEntregaDoPedido.command.js";
+import { CancelarPedidoCommand } from "../../../application/commands/pedidosCommands/cancelarPedido/cancelar-Pedido.command.js";
+import { ConfirmarPagamentoCommand } from "../../../application/commands/pedidosCommands/confirmarPagamento/confirmar-pagamento.command.js";
+import { MarcaPedidoEmSeparacaoCommand } from "../../../application/commands/pedidosCommands/marcaPedidoComoEmSeparado/marcaPedidoComoEmSeparado.command.js";
+import { MarcaPedidoComoEntregueCommand } from "../../../application/commands/pedidosCommands/marcaPedidoComoEntregue/marca-PedidoComoEntregue.command.js";
+import { MarcaPedidoComoEnviadoCommand } from "../../../application/commands/pedidosCommands/marcaPedidoComoEnviado/marca-PedidoComoEnviado.command.js";
+import { RemoverItemDoPedidoCommand } from "../../../application/commands/pedidosCommands/removerItemDoPedido/remover-ItemDoPedido.command.js";
+import { EnderecoEntrega } from "../../../domain/pedido/value-object/endereco-entrega.js";
 import type { CriarPedidoRequest } from "./criar-pedido.request.js";
 import type {
   AdicionarItemParams,
@@ -19,6 +26,13 @@ import type {
   ConfirmarPagamentoParams,
   ConfirmarPagamentoRequest,
 } from "./confirmar-pagamento.request.js";
+import type { PedidoIdParams } from "./alterar-status-pedido.request.js";
+import type {
+  AtualizarEnderecoEntregaParams,
+  AtualizarEnderecoEntregaRequest,
+} from "./atualizar-endereco-entrega.request.js";
+import type { CancelarPedidoRequest } from "./cancelar-pedido.request.js";
+import type { RemoverItemParams } from "./remover-item.request.js";
 
 export function pedidoRouter(container: ReturnType<typeof criarContainer>) {
   const router = Router();
@@ -222,30 +236,233 @@ export function pedidoRouter(container: ReturnType<typeof criarContainer>) {
     },
   );
   router.post(
-    "/:id/pagamento/comfirmar",
+    "/:id/pagamento/confirmar",
     async (
       req: Request<ConfirmarPagamentoParams, {}, ConfirmarPagamentoRequest>,
       res: Response,
     ) => {
       try {
-        const pedido = await container.repositories.pedidoRepository.obterPorId(
-          req.params.id,
+        const command = new ConfirmarPagamentoCommand(
+          Number(req.params.id),
+          req.body.pagamentoId,
         );
-        if (pedido == null)
-          return res.status(404).json("Pedido nao localizado");
-        //simulando o retorno gateway
-        const pagamento = pedido.getPagamento();
 
-        if (pagamento == null) {
-          return res.status(404).json({
-            erro: "Pagamento não encontrado",
+        const resultado =
+          await container.handlers.confirmarPagamentoHandler.executar(command);
+
+        return res.status(200).json(resultado);
+      } catch (error) {
+        if (error instanceof DomainException) {
+          return res.status(422).json({
+            erro: error.message,
           });
-          //ainda nao tem
-          //        pagamento.gerarCodigoTransacaoLocal();
-          pagamento?.confirmar;
         }
-      } catch (error) {}
+        if (error instanceof Error) {
+          return res.status(404).json({
+            erro: error.message,
+          });
+        }
+        return res.status(500).json({
+          erro: "erro interno",
+        });
+      }
     },
   );
+
+  router.patch(
+    "/:id/endereco-entrega",
+    async (
+      req: Request<
+        AtualizarEnderecoEntregaParams,
+        {},
+        AtualizarEnderecoEntregaRequest
+      >,
+      res: Response,
+    ) => {
+      try {
+        const enderecoEntrega = EnderecoEntrega.criar(
+          req.body.cep,
+          req.body.logradouro,
+          req.body.bairro,
+          req.body.complemento,
+          req.body.uf,
+          req.body.cidade,
+          req.body.pais,
+          req.body.numero,
+        );
+        const command = new AtualizarEnderecoEntregaDoPedidoCommand(
+          Number(req.params.id),
+          enderecoEntrega,
+        );
+
+        const resultado =
+          await container.handlers.atualizarEnderecoEntregaHandler.executar(
+            command,
+          );
+
+        return res.status(200).json(resultado);
+      } catch (error) {
+        if (error instanceof DomainException) {
+          return res.status(422).json({
+            erro: error.message,
+          });
+        }
+        if (error instanceof Error) {
+          return res.status(404).json({
+            erro: error.message,
+          });
+        }
+        return res.status(500).json({
+          erro: "erro interno",
+        });
+      }
+    },
+  );
+
+  router.delete(
+    "/:id/itens/:itemId",
+    async (req: Request<RemoverItemParams>, res: Response) => {
+      try {
+        const command = new RemoverItemDoPedidoCommand(
+          Number(req.params.id),
+          Number(req.params.itemId),
+        );
+
+        const resultado =
+          await container.handlers.removerItemHandler.executar(command);
+
+        return res.status(200).json(resultado);
+      } catch (error) {
+        if (error instanceof DomainException) {
+          return res.status(422).json({
+            erro: error.message,
+          });
+        }
+        if (error instanceof Error) {
+          return res.status(404).json({
+            erro: error.message,
+          });
+        }
+        return res.status(500).json({
+          erro: "erro interno",
+        });
+      }
+    },
+  );
+
+  router.post(
+    "/:id/cancelar",
+    async (
+      req: Request<PedidoIdParams, {}, CancelarPedidoRequest>,
+      res: Response,
+    ) => {
+      try {
+        const command = new CancelarPedidoCommand(
+          Number(req.params.id),
+          Number(req.body.codigoMotivo),
+        );
+
+        const resultado =
+          await container.handlers.cancelarPedidoHandler.executar(command);
+
+        return res.status(200).json(resultado);
+      } catch (error) {
+        if (error instanceof DomainException) {
+          return res.status(422).json({
+            erro: error.message,
+          });
+        }
+        if (error instanceof Error) {
+          return res.status(404).json({
+            erro: error.message,
+          });
+        }
+        return res.status(500).json({
+          erro: "erro interno",
+        });
+      }
+    },
+  );
+
+  router.post("/:id/separar", async (req: Request<PedidoIdParams>, res) => {
+    try {
+      const command = new MarcaPedidoEmSeparacaoCommand(Number(req.params.id));
+
+      const resultado =
+        await container.handlers.marcarPedidoEmSeparacaoHandler.executar(
+          command,
+        );
+
+      return res.status(200).json(resultado);
+    } catch (error) {
+      if (error instanceof DomainException) {
+        return res.status(422).json({
+          erro: error.message,
+        });
+      }
+      if (error instanceof Error) {
+        return res.status(404).json({
+          erro: error.message,
+        });
+      }
+      return res.status(500).json({
+        erro: "erro interno",
+      });
+    }
+  });
+
+  router.post("/:id/enviar", async (req: Request<PedidoIdParams>, res) => {
+    try {
+      const command = new MarcaPedidoComoEnviadoCommand(Number(req.params.id));
+
+      const resultado =
+        await container.handlers.marcarPedidoComoEnviadoHandler.executar(
+          command,
+        );
+
+      return res.status(200).json(resultado);
+    } catch (error) {
+      if (error instanceof DomainException) {
+        return res.status(422).json({
+          erro: error.message,
+        });
+      }
+      if (error instanceof Error) {
+        return res.status(404).json({
+          erro: error.message,
+        });
+      }
+      return res.status(500).json({
+        erro: "erro interno",
+      });
+    }
+  });
+
+  router.post("/:id/entregar", async (req: Request<PedidoIdParams>, res) => {
+    try {
+      const command = new MarcaPedidoComoEntregueCommand(Number(req.params.id));
+
+      const resultado =
+        await container.handlers.marcarPedidoComoEntregueHandler.executar(
+          command,
+        );
+
+      return res.status(200).json(resultado);
+    } catch (error) {
+      if (error instanceof DomainException) {
+        return res.status(422).json({
+          erro: error.message,
+        });
+      }
+      if (error instanceof Error) {
+        return res.status(404).json({
+          erro: error.message,
+        });
+      }
+      return res.status(500).json({
+        erro: "erro interno",
+      });
+    }
+  });
   return router;
 }

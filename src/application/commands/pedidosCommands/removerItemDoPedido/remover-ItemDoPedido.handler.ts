@@ -20,7 +20,7 @@ export class RemoverItemDoPedidoHandler {
     return new RemoverItemDoPedidoResultDto(
       pedido.id,
       pedido.total(),
-      pedido.getStatusPedido.toString(),
+      pedido.getStatusPedido().toString(),
     );
   }
 }

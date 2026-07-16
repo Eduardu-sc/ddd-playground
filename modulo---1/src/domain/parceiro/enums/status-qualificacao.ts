@@ -1,4 +1,0 @@
-export enum StatusQualificacao {
-  NAOQUALIFICADO = "NAOQUALIFICADO",
-  QUALIFICADO = "QUALIFICADO",
-}

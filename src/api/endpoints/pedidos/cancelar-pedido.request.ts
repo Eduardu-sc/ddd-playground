@@ -1,3 +1,3 @@
 export class CancelarPedidoRequest {
-  constructor(public readonly codigoMotivo: string) {}
+  constructor(public readonly codigoMotivo: number) {}
 }

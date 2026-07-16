@@ -1,4 +1,4 @@
-import { DomainException } from "../../../../../modulo---1/src/domain/common/exceptions/domain-exception.js";
+import { DomainException } from "../../../../domain/common/exceptions/domain-exception.js";
 
 import type { IPedidoRepository } from "../../../abstrations/persistence/ipedido-repository.js";
 import { MarcaPedidoComoSeparadoResultDto } from "./marcaPedidoComoEmSeparado.resultDto.js";
@@ -14,7 +14,7 @@ export class MarcaPedidoEmSeparacaoHandler {
       throw new DomainException("pedido nao localizado");
     }
 
-    pedido.marcarComoEmSeparado;
+    pedido.marcarComoEmSeparado();
     await this._repositoryPedido.atualizar(pedido);
 
     return new MarcaPedidoComoSeparadoResultDto(

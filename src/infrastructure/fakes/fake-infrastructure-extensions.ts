@@ -1,6 +1,13 @@
 import { AdicionarItemAoPedidoHandler } from "../../application/commands/pedidosCommands/adicionarItemAoPedido/adicionar-itemAoPedido.handles.js";
+import { AtualizaEnderecoEntregaDoPedidoHandler } from "../../application/commands/pedidosCommands/atulizarEnderecoEntrega/atualizar-EnderecoDeEntregaDoPedido.handler.js";
+import { CancelarPedidoHandler } from "../../application/commands/pedidosCommands/cancelarPedido/cancelar-Pedido.handler.js";
+import { ConfirmarPagamentoHandler } from "../../application/commands/pedidosCommands/confirmarPagamento/confirmar-pagamento.handler.js";
 import { CriarPedidoCommandHandler } from "../../application/commands/pedidosCommands/criarPedido/criar-pedido.handler.js";
 import { IniciarPagamentoHandler } from "../../application/commands/pedidosCommands/iniciarPagamento/iniciar-pagamento.handler.js";
+import { MarcaPedidoEmSeparacaoHandler } from "../../application/commands/pedidosCommands/marcaPedidoComoEmSeparado/marcaPedidoComoEmSeparado.handler.js";
+import { MarcaPedidoComoEntregueHandler } from "../../application/commands/pedidosCommands/marcaPedidoComoEntregue/marca-PedidoComoEntregue.handler.js";
+import { MarcaPedidoComoEnviado } from "../../application/commands/pedidosCommands/marcaPedidoComoEnviado/marca-PedidoComoEnviado.handler.js";
+import { RemoverItemDoPedidoHandler } from "../../application/commands/pedidosCommands/removerItemDoPedido/remover-ItemDoPedido.handler.js";
 import { CatalogoAcl } from "../../domain/pedido/integration/catalogo/catalogo-acl.js";
 import { ClienteAcl } from "../../domain/pedido/integration/cliente/cliente-acl.js";
 import { FakeCatalogoGateway } from "./fake-catalogo-gateway.js";
@@ -44,6 +51,22 @@ export function criarContainer() {
     catalogoAcl,
   );
   const iniciarPagamentoHandler = new IniciarPagamentoHandler(pedidoRepository);
+  const confirmarPagamentoHandler = new ConfirmarPagamentoHandler(
+    pedidoRepository,
+  );
+  const atualizarEnderecoEntregaHandler =
+    new AtualizaEnderecoEntregaDoPedidoHandler(pedidoRepository);
+  const removerItemHandler = new RemoverItemDoPedidoHandler(pedidoRepository);
+  const cancelarPedidoHandler = new CancelarPedidoHandler(pedidoRepository);
+  const marcarPedidoEmSeparacaoHandler = new MarcaPedidoEmSeparacaoHandler(
+    pedidoRepository,
+  );
+  const marcarPedidoComoEnviadoHandler = new MarcaPedidoComoEnviado(
+    pedidoRepository,
+  );
+  const marcarPedidoComoEntregueHandler = new MarcaPedidoComoEntregueHandler(
+    pedidoRepository,
+  );
 
   return {
     repositories: {
@@ -64,6 +87,13 @@ export function criarContainer() {
       criarPedidoHandler,
       adicionarItemHandler,
       iniciarPagamentoHandler,
+      confirmarPagamentoHandler,
+      atualizarEnderecoEntregaHandler,
+      removerItemHandler,
+      cancelarPedidoHandler,
+      marcarPedidoEmSeparacaoHandler,
+      marcarPedidoComoEnviadoHandler,
+      marcarPedidoComoEntregueHandler,
     },
   };
 }
