@@ -10,6 +10,7 @@ import { MarcaPedidoComoEnviado } from "../../application/commands/pedidosComman
 import { RemoverItemDoPedidoHandler } from "../../application/commands/pedidosCommands/removerItemDoPedido/remover-ItemDoPedido.handler.js";
 import { CatalogoAcl } from "../../domain/pedido/integration/catalogo/catalogo-acl.js";
 import { ClienteAcl } from "../../domain/pedido/integration/cliente/cliente-acl.js";
+import { PedidoRepository } from "../persistence/repositories/pedido.repository.js";
 import { FakeCatalogoGateway } from "./fake-catalogo-gateway.js";
 import { FakePedidoRepository } from "./fake-pedido-repository.js";
 import { FakeClientesGateway } from "./fakeClienteGataway.js";
@@ -19,7 +20,7 @@ export function criarContainer() {
   // Repositories
   // -----------------------------
 
-  const pedidoRepository = new FakePedidoRepository();
+  const pedidoRepository = new PedidoRepository();
 
   // -----------------------------
   // Gateways

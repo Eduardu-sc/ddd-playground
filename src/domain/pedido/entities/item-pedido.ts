@@ -6,11 +6,13 @@ export class ItemPedido extends Entity {
 
   constructor(
     public readonly id: number,
+    public readonly produtoId: number,
     public readonly nome: string,
     public quantidade: number,
     public valorUnitario: number,
   ) {
     super(id);
+    Guard.contraEmptyNumber(produtoId, "Produto é obrigatório");
     Guard.contraEmpty(nome, "Produto é obrigatório");
     Guard.contra(quantidade <= 0, "Quantidade deve ser maior que zero");
     Guard.contraValorNegativo(
@@ -72,5 +74,20 @@ export class ItemPedido extends Entity {
 
   calcularTotal(): number {
     return this.subtotal() - this.descontoAplicado;
+  }
+  static restaurar(
+    id: number,
+    produtoId: number,
+    nome: string,
+    quantidade: number,
+    valorUnitario: number,
+  ): ItemPedido {
+    return new ItemPedido(
+      id,
+      produtoId,
+      nome,
+      quantidade,
+      valorUnitario,
+    );
   }
 }

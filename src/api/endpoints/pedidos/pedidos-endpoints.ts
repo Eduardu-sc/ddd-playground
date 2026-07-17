@@ -121,7 +121,7 @@ export function pedidoRouter(container: ReturnType<typeof criarContainer>) {
       },
 
       itens: pedido.getItens().map((i) => ({
-        produtoId: i.id,
+        produtoId: i.produtoId,
         nomeProduto: i.nome,
         precoUnitario: i.valorUnitario,
         quantidade: i.quantidade,

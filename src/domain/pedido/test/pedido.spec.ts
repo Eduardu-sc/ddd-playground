@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { Pedido } from "../entities/pedido.js";
 import { EnderecoEntraga } from "../value-object/endereco-entrega.js";
-import { ItemPedido } from "../entities/item-pedido.js";
 
 describe("Pedido", () => {
   it("Dedeve criar um pedido valido", () => {
@@ -31,8 +30,8 @@ describe("Pedido", () => {
     );
 
     const pedido = new Pedido(1, 1, enderecoEntrega, []);
-    pedido.adicionarItem(new ItemPedido("paracetamol", 10, 1));
-    pedido.adicionarItem(new ItemPedido("paracetamol", 5, 5));
+    pedido.adicionarItem(1, "paracetamol", 1, 10);
+    pedido.adicionarItem(2, "paracetamol", 5, 5);
 
     expect(pedido.total()).toBe(35);
   });

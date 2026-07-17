@@ -15,6 +15,34 @@
       "when": 1784243390012,
       "tag": "0001_panoramic_iron_monger",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1784303517990,
+      "tag": "0002_gigantic_starhawk",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1784303687578,
+      "tag": "0003_friendly_kabuki",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1784304779566,
+      "tag": "0004_curved_hex",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1784318434541,
+      "tag": "0005_smooth_kid_colt",
+      "breakpoints": true
     }
   ]
 }

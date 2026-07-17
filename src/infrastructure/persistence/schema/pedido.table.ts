@@ -4,8 +4,6 @@ export const pedidos = sqliteTable("pedidos", {
   // Pedido
   id: integer("id").primaryKey({ autoIncrement: true }),
 
-  numeroPedido: text("numero_pedido").notNull(),
-
   parceiroId: integer("parceiro_id").notNull(),
 
   statusPedido: text("status_pedido").notNull(),

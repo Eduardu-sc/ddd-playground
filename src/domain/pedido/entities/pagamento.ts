@@ -31,6 +31,24 @@ export class Pagamento extends Entity {
     this.dataPagamento = null;
     this.codigoTransacao = "";
   }
+
+  static restaurar(
+    id: number,
+    pedidoId: number,
+    metodoPagamento: MetodoPagamento,
+    valor: number,
+    statusPagamento: StatusPagamento,
+    dataPagamento: Date | null,
+    codigoTransacao: string,
+  ): Pagamento {
+    const pagamento = new Pagamento(id, pedidoId, metodoPagamento, valor);
+
+    pagamento.statusPagamento = statusPagamento;
+    pagamento.dataPagamento = dataPagamento;
+    pagamento.codigoTransacao = codigoTransacao;
+
+    return pagamento;
+  }
   getStatusDoPagamento(): StatusPagamento {
     return this.statusPagamento;
   }

@@ -13,24 +13,12 @@ import { PedidoCanceladoEvent } from "../events/pedido-cancelado.event.js";
 import { PedidoCriadoEvent } from "../events/pedido-criado.event.js";
 import { PedidoSeparadoEvent } from "../events/pedido-separado.event.js";
 
-type ReconstituirPedidoProps = {
-  id: number;
-  numeroPedido: string;
-  parceiroId: number;
-  enderecoEntrega: EnderecoEntrega;
-  statusPedido: StatusPedido;
-  itens: ItemPedido[];
-  dataCriacao: Date;
-  dataAtualizacao: Date;
-};
-
 export class Pedido extends AggregateRoot {
   private motivoCancelamento: MotivoCancelamento | null = null;
   private pagamento: Pagamento | null = null;
 
   private constructor(
-    id: number,
-    public readonly numeroPedido: string,
+    public id: number,
     public readonly parceiroId: number,
     private enderecoEntrega: EnderecoEntrega,
     private statusPedido: StatusPedido,
@@ -48,7 +36,6 @@ export class Pedido extends AggregateRoot {
     // const numeroPedido = `PED-${id}`;
     const pedido = new Pedido(
       0,
-      "",
       parceiroId,
       enderecoEntrega,
 
@@ -58,8 +45,28 @@ export class Pedido extends AggregateRoot {
     pedido.addDomainEvent(new PedidoCriadoEvent(pedido.id, pedido.parceiroId));
     return pedido;
   }
-  static reconstituir(props: ReconstituirPedidoProps): Pedido {
-    throw new Error("Not implemented");
+  static restaurar(
+    id: number,
+
+    parceiroId: number,
+    enderecoEntrega: EnderecoEntrega,
+    statusPedido: StatusPedido,
+    itens: ItemPedido[],
+    pagamento: Pagamento | null,
+    motivoCancelamento: MotivoCancelamento | null,
+  ): Pedido {
+    const pedido = new Pedido(
+      id,
+      parceiroId,
+      enderecoEntrega,
+      statusPedido,
+      itens,
+    );
+
+    pedido.pagamento = pagamento;
+    pedido.motivoCancelamento = motivoCancelamento;
+
+    return pedido;
   }
 
   marcarComoEntregue(): void {
@@ -97,7 +104,10 @@ export class Pedido extends AggregateRoot {
     this.marcaComoAlterado();
     this.addDomainEvent(new PedidoSeparadoEvent(this.id, this.parceiroId));
   }
-
+  definirId(id: number): void {
+    Guard.contra(this.id > 0, "O ID já foi definido.");
+    this.id = id;
+  }
   cancelar(motivo: MotivoCancelamento): void {
     Guard.contra(
       this.statusPedido !== StatusPedido.PENDENTE,
@@ -131,6 +141,7 @@ export class Pedido extends AggregateRoot {
   get getEnderecoEntrega(): EnderecoEntrega {
     return this.enderecoEntrega;
   }
+
   atualizarEnderecoEntrega(novoEndereco: EnderecoEntrega) {
     Guard.contra(
       this.statusPedido !== StatusPedido.PENDENTE,
@@ -151,6 +162,7 @@ export class Pedido extends AggregateRoot {
     Guard.contra(quantidade <= 0, "Quantidade deve ser maior que zero");
 
     const item = new ItemPedido(
+      this.id,
       produtoId,
       nomeProduto,
       quantidade,

@@ -2,6 +2,10 @@ import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
+import { pedidos } from "./../schema/pedido.table.js";
+import { itensPedido } from "../schema/item-pedido.table.js";
+import { pagamentos } from "../schema/pagamento.table.js";
+
 export class AppDatabase {
   private static instance: ReturnType<typeof drizzle>;
 
@@ -11,7 +15,13 @@ export class AppDatabase {
         "./src/infrastructure/persistence/database/ddd-playground.db",
       );
 
-      this.instance = drizzle(sqlite);
+      this.instance = drizzle(sqlite, {
+        schema: {
+          pedidos,
+          itensPedido,
+          pagamentos,
+        },
+      });
     }
 
     return this.instance;
