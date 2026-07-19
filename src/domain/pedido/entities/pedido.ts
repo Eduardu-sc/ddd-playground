@@ -87,7 +87,7 @@ export class Pedido extends AggregateRoot {
       "Somente pedidos pendentes podem ser enviado.",
     );
     Guard.contra(
-      this.pagamento?.getStatusDoPagamento() !== StatusPagamento.APROVADO,
+      this.pagamento?.getStatusPagamento() !== StatusPagamento.APROVADO,
       "O pagamento deve estar aprovado para enviar o pedido.",
     );
     this.statusPedido = StatusPedido.ENVIADO;

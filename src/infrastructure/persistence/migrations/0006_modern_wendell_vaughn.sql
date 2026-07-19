@@ -1,0 +1,1 @@
+ALTER TABLE `pedidos` ADD `motivo_cancelamento` integer;

@@ -12,6 +12,7 @@ import { Pagamento } from "../../../domain/pedido/entities/pagamento.js";
 
 import { MetodoPagamento } from "../../../domain/pedido/enums/metodo-pagamento.js";
 import { StatusPagamento } from "../../../domain/pedido/enums/pagamento.enum.js";
+import { MotivoCancelamento } from "../../../domain/pedido/value-object/motivo-cancelamento.js";
 
 export class PedidoRepository implements IPedidoRepository {
   private readonly db = AppDatabase.db;
@@ -42,8 +43,9 @@ export class PedidoRepository implements IPedidoRepository {
     pedido.definirId(registro.id);
   }
   async atualizar(pedido: Pedido): Promise<void> {
-    const endereco = pedido.getEnderecoEntrega;
 
+    const endereco = pedido.getEnderecoEntrega;
+    
     await this.db
       .update(pedidos)
       .set({
@@ -78,50 +80,39 @@ export class PedidoRepository implements IPedidoRepository {
           valorUnitario: item.valorUnitario,
         })),
       );
-    }
-  }
-  async listarTodos(): Promise<readonly Pedido[]> {
-    const registros = await this.db.select().from(pedidos);
+      const pagamento = pedido.getPagamento();
 
-    return Promise.all(
-      registros.map(async (registro) => {
-        const itens = await this.db
+      if (!pagamento === null) {
+        const [pagamentoBanco] = await this.db
           .select()
-          .from(itensPedido)
-          .where(eq(itensPedido.pedidoId, registro.id));
-
-        const enderecoEntrega = EnderecoEntrega.criar(
-          registro.enderecoCep,
-          registro.enderecoLogradouro,
-          registro.enderecoBairro,
-          registro.enderecoComplemento ?? "",
-          registro.enderecoUf,
-          registro.enderecoCidade,
-          registro.enderecoPais,
-          registro.enderecoNumero,
-        );
-
-        const itensRestaurados = itens.map((item) =>
-          ItemPedido.restaurar(
-            item.id,
-            item.produtoId,
-            item.nome,
-            item.quantidade,
-            item.valorUnitario,
-          ),
-        );
-
-        return Pedido.restaurar(
-          registro.id,
-          registro.parceiroId,
-          enderecoEntrega,
-          registro.statusPedido as StatusPedido,
-          itensRestaurados,
-          null,
-          null,
-        );
-      }),
-    );
+          .from(pagamentos)
+          .where(eq(pagamentos.pedidoId, pedido.id));
+        // Insere ou atualiza
+        if (pagamentoBanco) {
+          await this.db
+            .update(pagamentos)
+            .set({
+              metodoPagamento: pagamentos.metodoPagamento,
+              statusPagamento: pagamentos.statusPagamento,
+              valor: pagamentos.valor,
+              dataPagamento: pagamentos.dataPagamento,
+              codigoTransacao: pagamentos.codigoTransacao,
+            })
+            .where(eq(pagamentos.id, pagamentoBanco.id));
+        } else {
+          if (pagamento) {
+            await this.db.insert(pagamentos).values({
+              pedidoId: pedido.id,
+              metodoPagamento: pagamento.getMetodoPagamento(),
+              statusPagamento: pagamento.getStatusPagamento(),
+              valor: pagamento.getValor(),
+              dataPagamento: pagamento.getDataPagamento(),
+              codigoTransacao: pagamento.getCodigoTransacao(),
+            });
+          }
+        }
+      }
+    }
   }
 
   async obterPorId(id: number): Promise<Pedido | null> {
@@ -177,6 +168,11 @@ export class PedidoRepository implements IPedidoRepository {
         )
       : null;
 
+    const motivo =
+      registro.motivoCancelamento !== null
+        ? MotivoCancelamento.porCodigo(registro.motivoCancelamento)
+        : null;
+
     return Pedido.restaurar(
       registro.id,
       registro.parceiroId,
@@ -184,7 +180,7 @@ export class PedidoRepository implements IPedidoRepository {
       registro.statusPedido as StatusPedido,
       itemRestaurados,
       pagamentoRestaurado,
-      null,
+      motivo,
     );
   }
 }

@@ -8,6 +8,8 @@ export const pedidos = sqliteTable("pedidos", {
 
   statusPedido: text("status_pedido").notNull(),
 
+  motivoCancelamento: integer("motivo_cancelamento"),
+
   dataCriacao: integer("data_criacao", {
     mode: "timestamp",
   }).notNull(),

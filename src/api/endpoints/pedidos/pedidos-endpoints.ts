@@ -76,19 +76,19 @@ export function pedidoRouter(container: ReturnType<typeof criarContainer>) {
     });
   });
 
-  router.get("/", async (req, res) => {
-    const pedidos = await container.repositories.pedidoRepository.listarTodos();
-    const resultado = pedidos.map((p) => ({
-      id: p.id,
-      numeroPedido: p.numeroPedido,
-      clienteId: p.parceiroId,
-      valorTotal: p.total(),
-      status: p.getStatusPedido().toString(),
-      dataCriacao: p.dataCriacao,
-      totalItens: p.getItens().length,
-    }));
-    return res.status(200).json(resultado);
-  });
+  // router.get("/", async (req, res) => {
+  //   const pedidos = await container.repositories.pedidoRepository.listarTodos();
+  //   const resultado = pedidos.map((p) => ({
+  //     id: p.id,
+  //     numeroPedido: p.numeroPedido,
+  //     clienteId: p.parceiroId,
+  //     valorTotal: p.total(),
+  //     status: p.getStatusPedido().toString(),
+  //     dataCriacao: p.dataCriacao,
+  //     totalItens: p.getItens().length,
+  //   }));
+  //   return res.status(200).json(resultado);
+  // });
 
   router.get("/:id", async (req, res) => {
     const pedidoId = Number(req.params.id);
@@ -102,7 +102,7 @@ export function pedidoRouter(container: ReturnType<typeof criarContainer>) {
 
     const resultado = {
       id: pedido.id,
-      numeroPedido: pedido.numeroPedido,
+      numeroPedido: pedido.id,
       clienteId: pedido.parceiroId,
       valorTotal: pedido.total(),
       status: pedido.getStatusPedido().toString(),
