@@ -30,7 +30,7 @@ export abstract class Entity {
   protected marcaComoAlterado(): void {
     this.dataAtualizacao = new Date();
   }
-   get getDataAtualizacao(): Date {
+  get getDataAtualizacao(): Date {
     return this.dataAtualizacao;
   }
 }

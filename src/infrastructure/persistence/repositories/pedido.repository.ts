@@ -19,6 +19,7 @@ export class PedidoRepository implements IPedidoRepository {
 
   async adicionar(pedido: Pedido): Promise<void> {
     const endereco = pedido.getEnderecoEntrega;
+   
     const [registro] = await this.db
       .insert(pedidos)
       .values({
@@ -43,9 +44,8 @@ export class PedidoRepository implements IPedidoRepository {
     pedido.definirId(registro.id);
   }
   async atualizar(pedido: Pedido): Promise<void> {
-
     const endereco = pedido.getEnderecoEntrega;
-    
+
     await this.db
       .update(pedidos)
       .set({
@@ -80,6 +80,7 @@ export class PedidoRepository implements IPedidoRepository {
           valorUnitario: item.valorUnitario,
         })),
       );
+
       const pagamento = pedido.getPagamento();
 
       if (!pagamento === null) {

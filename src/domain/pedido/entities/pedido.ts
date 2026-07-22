@@ -143,7 +143,7 @@ export class Pedido extends AggregateRoot {
   }
 
   atualizarEnderecoEntrega(novoEndereco: EnderecoEntrega) {
-    Guard.contra( 
+    Guard.contra(
       this.statusPedido !== StatusPedido.PENDENTE,
       "O endereço só pode ser alterado enquanto o pedido estiver pendente.",
     );
